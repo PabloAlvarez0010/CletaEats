@@ -4,12 +4,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.compose.*
 import androidx.navigation.navArgument
+import com.example.cletaeats.fronted.ui.AdminHomeScreen
 import com.example.cletaeats.fronted.ui.HomeScreen
 import com.example.cletaeats.fronted.ui.LoginScreen
 import com.example.cletaeats.ui.theme.CletaEatsTheme
@@ -36,6 +36,7 @@ fun AppNavigator() {
         composable("login") {
             LoginScreen(navController)
         }
+
         composable(
             route = "home/{rol}/{cedula}",
             arguments = listOf(
@@ -46,6 +47,21 @@ fun AppNavigator() {
             val rol = backStackEntry.arguments?.getString("rol") ?: ""
             val cedula = backStackEntry.arguments?.getString("cedula") ?: ""
             HomeScreen(rol, cedula)
+        }
+
+        // ✅ Ruta para el administrador
+        composable(
+            route = "adminHome/{cedula}",
+            arguments = listOf(
+                navArgument("cedula") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val cedula = backStackEntry.arguments?.getString("cedula") ?: ""
+            AdminHomeScreen(
+                navController = navController,
+                nombre = "Administrador",
+                cedula = cedula
+            )
         }
     }
 }

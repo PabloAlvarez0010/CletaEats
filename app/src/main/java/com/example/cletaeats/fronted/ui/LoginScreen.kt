@@ -84,7 +84,11 @@ fun LoginScreen(navController: NavController) {
                 onClick = {
                     val usuario = UsuarioDAO(context).autenticar(cedula, clave)
                     if (usuario != null) {
-                        navController.navigate("home/${usuario.rol}/${usuario.cedula}")
+                        if (usuario.rol.lowercase() == "admin") {
+                            navController.navigate("adminHome/${usuario.cedula}")
+                        } else {
+                            navController.navigate("home/${usuario.rol}/${usuario.cedula}")
+                        }
                     } else {
                         error = "Cédula o clave incorrecta"
                     }
@@ -97,6 +101,7 @@ fun LoginScreen(navController: NavController) {
             ) {
                 Text("Ingresar", color = Color.White, fontSize = 18.sp)
             }
+
 
             error?.let {
                 Spacer(modifier = Modifier.height(16.dp))
