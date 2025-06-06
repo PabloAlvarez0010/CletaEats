@@ -10,6 +10,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.*
 import androidx.navigation.navArgument
 import com.example.cletaeats.fronted.ui.AdminHomeScreen
+import com.example.cletaeats.fronted.ui.ClienteHomeScreen
 import com.example.cletaeats.fronted.ui.HomeScreen
 import com.example.cletaeats.fronted.ui.LoginScreen
 import com.example.cletaeats.ui.theme.CletaEatsTheme
@@ -36,8 +37,22 @@ fun AppNavigator() {
         composable("login") {
             LoginScreen(navController)
         }
-
+        // ✅ Ruta para el cliente
         composable(
+            route = "clienteHome/{cedula}",
+            arguments = listOf(
+                navArgument("cedula") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val cedula = backStackEntry.arguments?.getString("cedula") ?: ""
+            ClienteHomeScreen(
+                navController = navController,
+                cedula = cedula
+            )
+        }
+
+
+        /*composable(
             route = "home/{rol}/{cedula}",
             arguments = listOf(
                 navArgument("rol") { type = NavType.StringType },
@@ -47,7 +62,7 @@ fun AppNavigator() {
             val rol = backStackEntry.arguments?.getString("rol") ?: ""
             val cedula = backStackEntry.arguments?.getString("cedula") ?: ""
             HomeScreen(rol, cedula)
-        }
+        }*/
 
         // ✅ Ruta para el administrador
         composable(

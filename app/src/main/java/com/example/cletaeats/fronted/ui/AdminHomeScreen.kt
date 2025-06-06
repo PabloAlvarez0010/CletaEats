@@ -22,6 +22,8 @@ import com.example.cletaeats.R
 import kotlinx.coroutines.launch
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.ExpandLess
+import com.example.cletaeats.fronted.ui.DrawerOption
+
 
 private val UberGreen = Color(0xFF06C167)
 private val UberBlack = Color(0xFF000000)
@@ -202,24 +204,3 @@ fun ExpandableDrawerOption(
     }
 }
 
-@Composable
-fun DrawerOption(
-    text: String,
-    icon: androidx.compose.ui.graphics.vector.ImageVector? = null,
-    color: Color = Color.White,
-    onClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(12.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        if (icon != null) {
-            Icon(icon, contentDescription = text, tint = color)
-            Spacer(modifier = Modifier.width(8.dp))
-        }
-        Text(text, color = color, fontSize = 14.sp)
-    }
-}
