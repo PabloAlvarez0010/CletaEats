@@ -13,7 +13,10 @@ import com.example.cletaeats.fronted.ui.admin.AdminHomeScreen
 import com.example.cletaeats.fronted.ui.cliente.CarritoScreen
 import com.example.cletaeats.fronted.ui.cliente.ClienteHomeScreen
 import com.example.cletaeats.fronted.ui.LoginScreen
+import com.example.cletaeats.fronted.ui.admin.ClientesTopPedidosScreen
 import com.example.cletaeats.fronted.ui.admin.ListaClientesScreen
+import com.example.cletaeats.fronted.ui.admin.QuejasPorRepartidorScreen
+import com.example.cletaeats.fronted.ui.admin.RepartidoresSinAmonestacionesScreen
 import com.example.cletaeats.ui.theme.CletaEatsTheme
 
 class MainActivity : ComponentActivity() {
@@ -57,6 +60,17 @@ fun AppNavigator() {
         composable("clientesActivosSuspendidos") {
             ListaClientesScreen(navController)
         }
+        composable("clientesTopPedidos") {
+            ClientesTopPedidosScreen(navController)
+        }
+        composable("repartidoresSinAmonestaciones") {
+            RepartidoresSinAmonestacionesScreen(navController)
+        }
+        composable("quejasPorRepartidor") {
+            QuejasPorRepartidorScreen(navController)
+        }
+
+
 
 
 

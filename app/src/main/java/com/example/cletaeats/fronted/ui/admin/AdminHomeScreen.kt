@@ -197,6 +197,15 @@ fun ExpandableDrawerOption(
                             "Listar clientes activos/suspendidos" -> {
                                 navController.navigate("clientesActivosSuspendidos")
                             }
+                            "Cliente con más pedidos" -> {
+                                navController.navigate("clientesTopPedidos")
+                            }
+                            "Listar sin amonestaciones" -> {
+                                navController.navigate("repartidoresSinAmonestaciones")
+                            }
+                            "Quejas por repartidor" -> {
+                                navController.navigate("quejasPorRepartidor")
+                            }
                             else -> {
                                 println("Seleccionado: $item")
                             }

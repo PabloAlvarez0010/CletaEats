@@ -77,4 +77,35 @@ class PedidoDAO(context: Context) {
         }
         return db.update("Pedido", values, "id = ?", arrayOf(id.toString())) > 0
     }
+
+    fun obtenerClientesConMasPedidosEntregados(): List<Pair<String, Int>> {
+        val db = dbHelper.readableDatabase
+        val resultado = mutableListOf<Pair<String, Int>>()
+
+        val query = """
+        SELECT cliente_id, COUNT(*) as total_entregados
+        FROM Pedido
+        WHERE estado = 'entregado'
+        GROUP BY cliente_id
+        HAVING total_entregados = (
+            SELECT MAX(cantidad)
+            FROM (
+                SELECT COUNT(*) AS cantidad
+                FROM Pedido
+                WHERE estado = 'entregado'
+                GROUP BY cliente_id
+            )
+        );
+    """.trimIndent()
+
+        val cursor = db.rawQuery(query, null)
+        while (cursor.moveToNext()) {
+            val cedula = cursor.getString(0)
+            val total = cursor.getInt(1)
+            resultado.add(Pair(cedula, total))
+        }
+        cursor.close()
+        return resultado
+    }
+
 }

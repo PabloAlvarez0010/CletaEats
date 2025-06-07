@@ -95,4 +95,29 @@ class RepartidorDAO(context: Context) {
         val db = dbHelper.writableDatabase
         return db.delete("Repartidor", "cedula = ?", arrayOf(cedula)) > 0
     }
+
+    fun obtenerRepartidoresSinAmonestaciones(): List<Repartidor> {
+        val lista = mutableListOf<Repartidor>()
+        val db = dbHelper.readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM Repartidor WHERE amonestaciones = 0", null)
+        while (cursor.moveToNext()) {
+            lista.add(
+                Repartidor(
+                    cedula = cursor.getString(cursor.getColumnIndexOrThrow("cedula")),
+                    nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre")),
+                    correo = cursor.getString(cursor.getColumnIndexOrThrow("correo")),
+                    direccion = cursor.getString(cursor.getColumnIndexOrThrow("direccion")),
+                    telefono = cursor.getString(cursor.getColumnIndexOrThrow("telefono")),
+                    tarjeta = cursor.getString(cursor.getColumnIndexOrThrow("tarjeta")),
+                    estado = cursor.getString(cursor.getColumnIndexOrThrow("estado")),
+                    distanciaPedido = cursor.getDouble(cursor.getColumnIndexOrThrow("distancia_pedido")),
+                    kmDiarios = cursor.getDouble(cursor.getColumnIndexOrThrow("km_diarios")),
+                    costoKmHabil = cursor.getDouble(cursor.getColumnIndexOrThrow("costo_km_habil")),
+                    costoKmFeriado = cursor.getDouble(cursor.getColumnIndexOrThrow("costo_km_feriado")),
+                    amonestaciones = cursor.getInt(cursor.getColumnIndexOrThrow("amonestaciones"))
+                )
+            )
+        }
+        return lista
+    }
 }
