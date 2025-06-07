@@ -1,4 +1,4 @@
-package com.example.cletaeats.fronted.ui
+package com.example.cletaeats.fronted.ui.admin
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
@@ -19,22 +19,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.cletaeats.R
-import kotlinx.coroutines.launch
-import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.material.icons.filled.ExpandLess
 import com.example.cletaeats.fronted.ui.DrawerOption
-
+import kotlinx.coroutines.launch
 
 private val UberGreen = Color(0xFF06C167)
 private val UberBlack = Color(0xFF000000)
-
 
 @Composable
 fun AdminHomeScreen(navController: NavController, nombre: String, cedula: String) {
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
 
-    // Estados para los submenús
     var clienteExpanded by remember { mutableStateOf(false) }
     var restauranteExpanded by remember { mutableStateOf(false) }
     var repartidorExpanded by remember { mutableStateOf(false) }
@@ -56,7 +51,6 @@ fun AdminHomeScreen(navController: NavController, nombre: String, cedula: String
         },
         drawerContent = {
             Column(modifier = Modifier.fillMaxSize()) {
-                // Sección superior
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -80,21 +74,21 @@ fun AdminHomeScreen(navController: NavController, nombre: String, cedula: String
                     Text("Cédula: $cedula", color = Color.White, fontSize = 12.sp)
                 }
 
-                // Opciones expandibles
                 Column(modifier = Modifier.background(UberGreen).fillMaxSize()) {
                     ExpandableDrawerOption(
+                        navController = navController,
                         title = "Clientes",
                         expanded = clienteExpanded,
                         onToggle = { clienteExpanded = !clienteExpanded },
                         subOptions = listOf(
                             "Incluir cliente",
-                            "Listar clientes activos",
-                            "Listar clientes suspendidos",
+                            "Listar clientes activos/suspendidos",
                             "Cliente con más pedidos"
                         )
                     )
 
                     ExpandableDrawerOption(
+                        navController = navController,
                         title = "Restaurantes",
                         expanded = restauranteExpanded,
                         onToggle = { restauranteExpanded = !restauranteExpanded },
@@ -108,6 +102,7 @@ fun AdminHomeScreen(navController: NavController, nombre: String, cedula: String
                     )
 
                     ExpandableDrawerOption(
+                        navController = navController,
                         title = "Repartidores",
                         expanded = repartidorExpanded,
                         onToggle = { repartidorExpanded = !repartidorExpanded },
@@ -119,6 +114,7 @@ fun AdminHomeScreen(navController: NavController, nombre: String, cedula: String
                     )
 
                     ExpandableDrawerOption(
+                        navController = navController,
                         title = "Pedidos",
                         expanded = pedidoExpanded,
                         onToggle = { pedidoExpanded = !pedidoExpanded },
@@ -130,6 +126,7 @@ fun AdminHomeScreen(navController: NavController, nombre: String, cedula: String
                     )
 
                     ExpandableDrawerOption(
+                        navController = navController,
                         title = "Reportes",
                         expanded = reporteExpanded,
                         onToggle = { reporteExpanded = !reporteExpanded },
@@ -155,7 +152,6 @@ fun AdminHomeScreen(navController: NavController, nombre: String, cedula: String
             }
         }
     ) {
-        // Contenido principal
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -169,6 +165,7 @@ fun AdminHomeScreen(navController: NavController, nombre: String, cedula: String
 
 @Composable
 fun ExpandableDrawerOption(
+    navController: NavController,
     title: String,
     expanded: Boolean,
     onToggle: () -> Unit,
@@ -196,11 +193,17 @@ fun ExpandableDrawerOption(
             Column(modifier = Modifier.padding(start = 32.dp)) {
                 subOptions.forEach { item ->
                     DrawerOption(text = item) {
-                        println("Seleccionado: $item")
+                        when (item) {
+                            "Listar clientes activos/suspendidos" -> {
+                                navController.navigate("clientesActivosSuspendidos")
+                            }
+                            else -> {
+                                println("Seleccionado: $item")
+                            }
+                        }
                     }
                 }
             }
         }
     }
 }
-

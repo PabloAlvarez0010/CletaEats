@@ -9,10 +9,11 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.compose.*
 import androidx.navigation.navArgument
-import com.example.cletaeats.fronted.ui.AdminHomeScreen
-import com.example.cletaeats.fronted.ui.ClienteHomeScreen
-import com.example.cletaeats.fronted.ui.HomeScreen
+import com.example.cletaeats.fronted.ui.admin.AdminHomeScreen
+import com.example.cletaeats.fronted.ui.cliente.CarritoScreen
+import com.example.cletaeats.fronted.ui.cliente.ClienteHomeScreen
 import com.example.cletaeats.fronted.ui.LoginScreen
+import com.example.cletaeats.fronted.ui.admin.ListaClientesScreen
 import com.example.cletaeats.ui.theme.CletaEatsTheme
 
 class MainActivity : ComponentActivity() {
@@ -50,6 +51,13 @@ fun AppNavigator() {
                 cedula = cedula
             )
         }
+        composable("carrito") {
+            CarritoScreen(navController)
+        }
+        composable("clientesActivosSuspendidos") {
+            ListaClientesScreen(navController)
+        }
+
 
 
         /*composable(

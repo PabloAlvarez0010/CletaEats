@@ -1,4 +1,4 @@
-package com.example.cletaeats.fronted.ui
+package com.example.cletaeats.fronted.ui.cliente
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.Image
@@ -124,8 +124,23 @@ fun ClienteHomeScreen(navController: NavController, cedula: String) {
                 }
             }
         },
-        backgroundColor = UberGray
-    ) { padding ->
+        backgroundColor = UberGray,
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { navController.navigate("carrito") },
+                backgroundColor = UberGreen,
+                contentColor = Color.White
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.buy),
+                    contentDescription = "Ver carrito",
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+        }
+    )
+
+    { padding ->
         LazyColumn(modifier = Modifier.padding(padding)) {
             items(restaurantes) { restaurante ->
                 Card(
