@@ -94,8 +94,7 @@ fun AdminHomeScreen(navController: NavController, nombre: String, cedula: String
                         onToggle = { restauranteExpanded = !restauranteExpanded },
                         subOptions = listOf(
                             "Incluir restaurante",
-                            "Restaurante con más pedidos",
-                            "Restaurante con menos pedidos",
+                            "Restaurante con más/menos pedidos",
                             "Monto total por restaurante",
                             "Monto total general"
                         )
@@ -206,6 +205,16 @@ fun ExpandableDrawerOption(
                             "Quejas por repartidor" -> {
                                 navController.navigate("quejasPorRepartidor")
                             }
+                            "Restaurante con más/menos pedidos" -> {
+                                navController.navigate("restaurantesTopPedidos")
+                            }
+                            "Monto total por restaurante" -> {
+                                navController.navigate("montoTotalPorRestaurante")
+                            }
+                            "Monto total general" -> {
+                                navController.navigate("montoTotalGeneral")
+                            }
+
                             else -> {
                                 println("Seleccionado: $item")
                             }

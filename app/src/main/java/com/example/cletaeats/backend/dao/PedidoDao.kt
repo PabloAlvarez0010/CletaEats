@@ -107,5 +107,99 @@ class PedidoDAO(context: Context) {
         cursor.close()
         return resultado
     }
+    fun obtenerRestaurantesConMasPedidosEntregados(): List<Pair<Int, Int>> {
+        val db = dbHelper.readableDatabase
+        val resultado = mutableListOf<Pair<Int, Int>>()
+
+        val subquery = """
+        SELECT restaurante_id, COUNT(*) as cantidad
+        FROM Pedido
+        WHERE estado = 'entregado'
+        GROUP BY restaurante_id
+    """
+
+        val mainQuery = """
+        SELECT restaurante_id, cantidad FROM (
+            $subquery
+        ) WHERE cantidad = (
+            SELECT MAX(cantidad) FROM (
+                $subquery
+            )
+        );
+    """.trimIndent()
+
+        val cursor = db.rawQuery(mainQuery, null)
+        while (cursor.moveToNext()) {
+            resultado.add(Pair(cursor.getInt(0), cursor.getInt(1)))
+        }
+        cursor.close()
+        return resultado
+    }
+
+
+    fun obtenerRestaurantesConMenosPedidosEntregados(): List<Pair<Int, Int>> {
+        val db = dbHelper.readableDatabase
+        val resultado = mutableListOf<Pair<Int, Int>>()
+
+        val subquery = """
+        SELECT restaurante_id, COUNT(*) as cantidad
+        FROM Pedido
+        WHERE estado = 'entregado'
+        GROUP BY restaurante_id
+    """
+
+        val mainQuery = """
+        SELECT restaurante_id, cantidad FROM (
+            $subquery
+        ) WHERE cantidad = (
+            SELECT MIN(cantidad) FROM (
+                $subquery
+            )
+        );
+    """.trimIndent()
+
+        val cursor = db.rawQuery(mainQuery, null)
+        while (cursor.moveToNext()) {
+            resultado.add(Pair(cursor.getInt(0), cursor.getInt(1)))
+        }
+        cursor.close()
+        return resultado
+    }
+
+    fun obtenerMontosTotalesPorRestaurante(): List<Pair<Int, Double>> {
+        val db = dbHelper.readableDatabase
+        val resultado = mutableListOf<Pair<Int, Double>>()
+
+        val query = """
+        SELECT restaurante_id, SUM(subtotal) as total
+        FROM Pedido
+        WHERE estado = 'entregado'
+        GROUP BY restaurante_id;
+    """.trimIndent()
+
+        val cursor = db.rawQuery(query, null)
+        while (cursor.moveToNext()) {
+            val restauranteId = cursor.getInt(0)
+            val montoTotal = cursor.getDouble(1)
+            resultado.add(Pair(restauranteId, montoTotal))
+        }
+        cursor.close()
+        return resultado
+    }
+
+    fun obtenerMontoTotalGeneral(): Double {
+        val db = dbHelper.readableDatabase
+        val query = """
+        SELECT SUM(subtotal)
+        FROM Pedido
+        WHERE estado = 'entregado';
+    """.trimIndent()
+
+        val cursor = db.rawQuery(query, null)
+        val total = if (cursor.moveToFirst()) cursor.getDouble(0) else 0.0
+        cursor.close()
+        return total
+    }
+
 
 }
