@@ -12,7 +12,7 @@ import androidx.navigation.navArgument
 import com.example.cletaeats.fronted.ui.admin.AdminHomeScreen
 import com.example.cletaeats.fronted.ui.cliente.CarritoScreen
 import com.example.cletaeats.fronted.ui.cliente.ClienteHomeScreen
-import com.example.cletaeats.fronted.ui.LoginScreen
+import com.example.cletaeats.fronted.ui.login.LoginScreen
 import com.example.cletaeats.fronted.ui.admin.ClientesTopPedidosScreen
 import com.example.cletaeats.fronted.ui.admin.ListaClientesScreen
 import com.example.cletaeats.fronted.ui.admin.MontoTotalGeneralScreen
@@ -20,6 +20,10 @@ import com.example.cletaeats.fronted.ui.admin.MontoTotalPorRestauranteScreen
 import com.example.cletaeats.fronted.ui.admin.QuejasPorRepartidorScreen
 import com.example.cletaeats.fronted.ui.admin.RepartidoresSinAmonestacionesScreen
 import com.example.cletaeats.fronted.ui.admin.RestaurantesTopPedidosScreen
+import com.example.cletaeats.fronted.ui.login.FormularioCliente
+import com.example.cletaeats.fronted.ui.login.FormularioRepartidor
+import com.example.cletaeats.fronted.ui.login.FormularioRestaurante
+import com.example.cletaeats.fronted.ui.login.SeleccionarRolRegistroScreen
 import com.example.cletaeats.ui.theme.CletaEatsTheme
 
 class MainActivity : ComponentActivity() {
@@ -81,6 +85,19 @@ fun AppNavigator() {
         composable("montoTotalGeneral") {
             MontoTotalGeneralScreen(navController)
         }
+        composable("registroUsuario") {
+            SeleccionarRolRegistroScreen(navController)
+        }
+        composable("registroCliente") {
+            FormularioCliente(navController)
+        }
+        composable("registroRepartidor") {
+            FormularioRepartidor(navController)
+        }
+        composable("registroRestaurante") {
+            FormularioRestaurante(navController)
+        }
+
 
 
 

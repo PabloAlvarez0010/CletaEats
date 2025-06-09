@@ -1,6 +1,5 @@
-package com.example.cletaeats.fronted.ui
+package com.example.cletaeats.fronted.ui.login
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -82,22 +81,23 @@ fun LoginScreen(navController: NavController) {
 
             Button(
                 onClick = {
-                    val usuario = UsuarioDAO(context).autenticar(cedula, clave)
-                    /*if (usuario != null) {
-                        if (usuario.rol.lowercase() == "admin") {
-                            navController.navigate("adminHome/${usuario.cedula}")
-                        } else {
-                            navController.navigate("home/${usuario.rol}/${usuario.cedula}")
-                        }
+                    if (cedula.isBlank() || clave.isBlank()) {
+                        error = "Por favor complete todos los campos"
                     } else {
-                        error = "Cédula o clave incorrecta"
-                    }*/
-                    when (usuario?.rol?.lowercase()) {
-                        "admin" -> navController.navigate("adminHome/${usuario.cedula}")
-                        "cliente" -> navController.navigate("clienteHome/${usuario.cedula}")
-                        else -> navController.navigate("home/${usuario?.rol}/${usuario?.cedula}")
+                        val usuario = UsuarioDAO(context).autenticar(cedula, clave)
+                        if (usuario == null) {
+                            error = "Cédula o clave incorrecta"
+                        } else if (usuario.verificado.lowercase() != "si") {
+                            error = "Usuario pendiente de verificación por el administrador"
+                        } else {
+                            when (usuario.rol.lowercase()) {
+                                "admin" -> navController.navigate("adminHome/${usuario.cedula}")
+                                "cliente" -> navController.navigate("clienteHome/${usuario.cedula}")
+                                else -> navController.navigate("home/${usuario.rol}/${usuario.cedula}")
+                            }
+                            error = null
+                        }
                     }
-
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -108,6 +108,9 @@ fun LoginScreen(navController: NavController) {
                 Text("Ingresar", color = Color.White, fontSize = 18.sp)
             }
 
+            TextButton(onClick = { navController.navigate("registroUsuario") }) {
+                Text("¿No tienes cuenta? Regístrate aquí", color = UberBlack)
+            }
 
             error?.let {
                 Spacer(modifier = Modifier.height(16.dp))

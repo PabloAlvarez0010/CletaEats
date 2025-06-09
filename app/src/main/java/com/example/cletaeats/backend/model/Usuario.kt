@@ -4,5 +4,6 @@ data class Usuario(
     val id: Int = 0,
     val cedula: String,
     val clave: String,
-    val rol: String // "cliente", "repartidor", "admin"
+    val rol: String, // "cliente", "repartidor", "admin"
+    val verificado: String
 )

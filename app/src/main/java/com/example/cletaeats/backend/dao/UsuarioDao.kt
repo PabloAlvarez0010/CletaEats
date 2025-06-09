@@ -19,17 +19,19 @@ class UsuarioDAO(context: Context) {
                 id = cursor.getInt(cursor.getColumnIndexOrThrow("id")),
                 cedula = cursor.getString(cursor.getColumnIndexOrThrow("cedula")),
                 clave = cursor.getString(cursor.getColumnIndexOrThrow("clave")),
-                rol = cursor.getString(cursor.getColumnIndexOrThrow("rol"))
+                rol = cursor.getString(cursor.getColumnIndexOrThrow("rol")),
+                verificado = cursor.getString(cursor.getColumnIndexOrThrow("verificado"))
             )
         } else null
     }
 
-    fun insertar(usuario: Usuario): Boolean {
+    fun insertar(cedula: String, clave: String, rol: String, verificado: String): Boolean {
         val db = dbHelper.writableDatabase
         val values = ContentValues().apply {
-            put("cedula", usuario.cedula)
-            put("clave", usuario.clave)
-            put("rol", usuario.rol)
+            put("cedula", cedula)
+            put("clave", clave)
+            put("rol", rol)
+            put("verificado", verificado)
         }
         return db.insert("Usuario", null, values) > 0
     }
@@ -44,10 +46,26 @@ class UsuarioDAO(context: Context) {
                     id = cursor.getInt(cursor.getColumnIndexOrThrow("id")),
                     cedula = cursor.getString(cursor.getColumnIndexOrThrow("cedula")),
                     clave = cursor.getString(cursor.getColumnIndexOrThrow("clave")),
-                    rol = cursor.getString(cursor.getColumnIndexOrThrow("rol"))
+                    rol = cursor.getString(cursor.getColumnIndexOrThrow("rol")),
+                    verificado = cursor.getString(cursor.getColumnIndexOrThrow("verificado"))
                 )
             )
         }
         return lista
     }
+
+    fun obtenerPorCedula(cedula: String): Usuario? {
+        val db = dbHelper.readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM Usuario WHERE cedula = ?", arrayOf(cedula))
+        return if (cursor.moveToFirst()) {
+            Usuario(
+                id = cursor.getInt(cursor.getColumnIndexOrThrow("id")),
+                cedula = cursor.getString(cursor.getColumnIndexOrThrow("cedula")),
+                clave = cursor.getString(cursor.getColumnIndexOrThrow("clave")),
+                rol = cursor.getString(cursor.getColumnIndexOrThrow("rol")),
+                verificado = cursor.getString(cursor.getColumnIndexOrThrow("verificado"))
+            )
+        } else null
+    }
+
 }
