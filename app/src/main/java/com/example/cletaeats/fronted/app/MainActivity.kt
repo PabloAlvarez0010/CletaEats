@@ -10,6 +10,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.*
 import androidx.navigation.navArgument
 import com.example.cletaeats.fronted.ui.admin.AdminHomeScreen
+import com.example.cletaeats.fronted.ui.admin.ClientesPendientesScreen
 import com.example.cletaeats.fronted.ui.cliente.CarritoScreen
 import com.example.cletaeats.fronted.ui.cliente.ClienteHomeScreen
 import com.example.cletaeats.fronted.ui.login.LoginScreen
@@ -18,7 +19,9 @@ import com.example.cletaeats.fronted.ui.admin.ListaClientesScreen
 import com.example.cletaeats.fronted.ui.admin.MontoTotalGeneralScreen
 import com.example.cletaeats.fronted.ui.admin.MontoTotalPorRestauranteScreen
 import com.example.cletaeats.fronted.ui.admin.QuejasPorRepartidorScreen
+import com.example.cletaeats.fronted.ui.admin.RepartidoresPendientesScreen
 import com.example.cletaeats.fronted.ui.admin.RepartidoresSinAmonestacionesScreen
+import com.example.cletaeats.fronted.ui.admin.RestaurantesPendientesScreen
 import com.example.cletaeats.fronted.ui.admin.RestaurantesTopPedidosScreen
 import com.example.cletaeats.fronted.ui.login.FormularioCliente
 import com.example.cletaeats.fronted.ui.login.FormularioRepartidor
@@ -97,6 +100,16 @@ fun AppNavigator() {
         composable("registroRestaurante") {
             FormularioRestaurante(navController)
         }
+        composable("clientesPendientes") {
+            ClientesPendientesScreen(navController)
+        }
+        composable("repartidoresPendientes") {
+           RepartidoresPendientesScreen(navController)
+        }
+        composable("restaurantesPendientes") {
+          RestaurantesPendientesScreen(navController)
+        }
+
 
 
 

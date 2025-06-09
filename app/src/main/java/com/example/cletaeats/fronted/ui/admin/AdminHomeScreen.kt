@@ -214,6 +214,15 @@ fun ExpandableDrawerOption(
                             "Monto total general" -> {
                                 navController.navigate("montoTotalGeneral")
                             }
+                            "Incluir cliente" -> {
+                                navController.navigate("clientesPendientes")
+                            }
+                            "Incluir restaurante" -> {
+                                navController.navigate("restaurantesPendientes")
+                            }
+                            "Incluir repartidor" -> {
+                                navController.navigate("repartidoresPendientes")
+                            }
 
                             else -> {
                                 println("Seleccionado: $item")

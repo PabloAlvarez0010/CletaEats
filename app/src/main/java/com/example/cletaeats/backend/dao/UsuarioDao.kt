@@ -67,5 +67,54 @@ class UsuarioDAO(context: Context) {
             )
         } else null
     }
+    fun obtenerClientesNoVerificados(): List<String> {
+        val db = dbHelper.readableDatabase
+        val lista = mutableListOf<String>()
+        val cursor = db.rawQuery(
+            "SELECT cedula FROM Usuario WHERE rol = 'cliente' AND verificado = 'no'", null
+        )
+        while (cursor.moveToNext()) {
+            lista.add(cursor.getString(0))
+        }
+        cursor.close()
+        return lista
+    }
+    fun obtenerRepartidoresNoVerificados(): List<String> {
+        val db = dbHelper.readableDatabase
+        val lista = mutableListOf<String>()
+        val cursor = db.rawQuery(
+            "SELECT cedula FROM Usuario WHERE rol = 'repartidor' AND verificado = 'no'", null
+        )
+        while (cursor.moveToNext()) {
+            lista.add(cursor.getString(0))
+        }
+        cursor.close()
+        return lista
+    }
+    fun obtenerRestaurantesNoVerificados(): List<String> {
+        val db = dbHelper.readableDatabase
+        val lista = mutableListOf<String>()
+        val cursor = db.rawQuery(
+            "SELECT cedula FROM Usuario WHERE rol = 'restaurante' AND verificado = 'no'", null
+        )
+        while (cursor.moveToNext()) {
+            lista.add(cursor.getString(0))
+        }
+        cursor.close()
+        return lista
+    }
+
+    fun actualizarVerificado(cedula: String, estado: String): Boolean {
+        val db = dbHelper.writableDatabase
+        val values = ContentValues().apply {
+            put("verificado", estado)
+        }
+        return db.update("Usuario", values, "cedula = ?", arrayOf(cedula)) > 0
+    }
+    fun eliminar(cedula: String): Boolean {
+        val db = dbHelper.writableDatabase
+        return db.delete("Usuario", "cedula = ?", arrayOf(cedula)) > 0
+    }
+
 
 }
