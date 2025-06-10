@@ -108,7 +108,7 @@ fun ClienteHomeScreen(navController: NavController, cedula: String, carritoViewM
                 // Opciones
                 Column(modifier = Modifier.background(UberGreen).fillMaxSize()) {
                     DrawerOption("Historial de pedidos") {
-                        // TODO: Navegar a historial
+                        navController.navigate("historialPedidos/${cliente?.cedula}")
                     }
                     DrawerOption("Formulario de quejas") {
                         // TODO: Navegar a quejas

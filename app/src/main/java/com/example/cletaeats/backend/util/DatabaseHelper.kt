@@ -174,10 +174,10 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
         db.execSQL("INSERT INTO Combo (numero, precio, descripcion, restaurante_id) VALUES (8, 11000, 'Bowl de avena con frutas y yogurt', 3);")
         db.execSQL("INSERT INTO Combo (numero, precio, descripcion, restaurante_id) VALUES (9, 12000, 'Combo vegetariano premium con bebida', 3);")
 
-        db.execSQL("INSERT INTO Pedido (cliente_id, restaurante_id, repartidor_id, estado, hora_pedido, hora_entrega, subtotal, costo_transporte, iva, total) VALUES ('111', 1, '444', 'entregado', '2023-10-01 12:00:00', '2023-10-01 12:30:00', 4000, 1000, 500, 5500);")
+        /*db.execSQL("INSERT INTO Pedido (cliente_id, restaurante_id, repartidor_id, estado, hora_pedido, hora_entrega, subtotal, costo_transporte, iva, total) VALUES ('111', 1, '444', 'entregado', '2023-10-01 12:00:00', '2023-10-01 12:30:00', 4000, 1000, 500, 5500);")
         db.execSQL("INSERT INTO Pedido (cliente_id, restaurante_id, repartidor_id, estado, hora_pedido, hora_entrega, subtotal, costo_transporte, iva, total) VALUES ('222', 2, '555', 'entregado', '2023-10-01 12:05:00', '2023-10-01 12:30:00', 5000, 1200, 600, 6800);")
         db.execSQL("INSERT INTO Pedido (cliente_id, restaurante_id, repartidor_id, estado, hora_pedido, hora_entrega, subtotal, costo_transporte, iva, total) VALUES ('333', 3, '666', 'entregado', '2023-10-01 12:10:00', '2023-10-01 12:30:00', 6000, 1500, 700, 8200);")
-        db.execSQL("INSERT INTO Pedido (cliente_id, restaurante_id, repartidor_id, estado, hora_pedido, hora_entrega, subtotal, costo_transporte, iva, total) VALUES ('111', 1, '444', 'entregado', '2023-10-01 12:15:00', '2023-10-01 12:30:00', 4000, 1000, 500, 5500);")
+        db.execSQL("INSERT INTO Pedido (cliente_id, restaurante_id, repartidor_id, estado, hora_pedido, hora_entrega, subtotal, costo_transporte, iva, total) VALUES ('111', 1, '444', 'entregado', '2023-10-01 12:15:00', '2023-10-01 12:30:00', 4000, 1000, 500, 5500);")*/
 
     }
 }
