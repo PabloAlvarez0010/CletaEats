@@ -127,13 +127,14 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
 
         // Insertar Repartidores
         db.execSQL("INSERT INTO Repartidor VALUES ('444', 'Andrés Mora', 'andresm@correo.com', 'Heredia', '88001122', '404', 'disponible', 3.2, 10.5, 1000, 1500, 0);")
-        db.execSQL("INSERT INTO Repartidor VALUES ('555', 'Sofía Zúñiga', 'sofiaz@correo.com', 'El Bosque', '87003344', '505', 'ocupado', 1.5, 6.7, 1000, 1500, 2);")
+        db.execSQL("INSERT INTO Repartidor VALUES ('555', 'Sofía Zúñiga', 'sofiaz@correo.com', 'El Bosque', '87003344', '505', 'disponible', 1.5, 6.7, 1000, 1500, 2);")
         db.execSQL("INSERT INTO Repartidor VALUES ('666', 'Esteban Vargas', 'estebv@correo.com', 'San Francisco', '89997766', '606', 'disponible', 0.0, 0.0, 1000, 1500, 4);")
 
         // Insertar Usuario
         db.execSQL("INSERT INTO Usuario (cedula, clave, rol, verificado) VALUES ('111', '1234', 'cliente', 'si');")
         db.execSQL("INSERT INTO Usuario (cedula, clave, rol, verificado) VALUES ('222', '1234', 'cliente', 'no');")
         db.execSQL("INSERT INTO Usuario (cedula, clave, rol, verificado) VALUES ('444', '1234', 'repartidor', 'si');")
+        db.execSQL("INSERT INTO Usuario (cedula, clave, rol, verificado) VALUES ('555', '1234', 'repartidor', 'si');")
         db.execSQL("INSERT INTO Usuario (cedula, clave, rol, verificado) VALUES ('777', '1234', 'admin', 'si');")
         db.execSQL("INSERT INTO Usuario (cedula, clave, rol, verificado) VALUES ('3101010101', '1234', 'restaurante', 'si');")
 

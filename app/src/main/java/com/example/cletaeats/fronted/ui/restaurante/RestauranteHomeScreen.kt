@@ -98,8 +98,14 @@ fun RestauranteHomeScreen(navController: NavController, cedulaJuridica: String) 
                 }
 
                 Column(modifier = Modifier.background(UberGreen).fillMaxSize()) {
-                    DrawerOption("Opción 1") { /*...*/ }
-                    DrawerOption("Opción 2") { /*...*/ }
+                    DrawerOption("Pedidos pendientes") {
+                        navController.navigate("pedidosPendientes/${restaurante?.id}")
+                    }
+
+                    DrawerOption("Pedidos preparados") {
+                        navController.navigate("pedidosPreparados/${restaurante?.cedulaJuridica}")
+                    }
+
                     Spacer(modifier = Modifier.weight(1f))
                     Divider()
                     DrawerOption(

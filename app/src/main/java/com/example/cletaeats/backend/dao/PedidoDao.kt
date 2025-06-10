@@ -320,6 +320,103 @@ class PedidoDAO(context: Context) {
         return pedidos
     }
 
+    fun marcarPedidoEnCamino(pedidoId: Int, repartidorId: String): Boolean {
+        val db = dbHelper.writableDatabase
+        val values = ContentValues().apply {
+            put("estado", "en camino")
+            put("repartidor_id", repartidorId)
+        }
+        return db.update("Pedido", values, "id = ?", arrayOf(pedidoId.toString())) > 0
+    }
+
+    fun obtenerPedidosPendientesPorRestaurante(restauranteId: Int): List<Pedido> {
+        val db = dbHelper.readableDatabase
+        val lista = mutableListOf<Pedido>()
+        val cursor = db.rawQuery(
+            """
+        SELECT * FROM Pedido
+        WHERE restaurante_id = ? AND estado = 'en preparación'
+        """.trimIndent(),
+            arrayOf(restauranteId.toString())
+        )
+        while (cursor.moveToNext()) {
+            lista.add(
+                Pedido(
+                    id = cursor.getInt(0),
+                    clienteId = cursor.getString(1),
+                    restauranteId = cursor.getInt(2),
+                    repartidorId = cursor.getString(3),
+                    estado = cursor.getString(4),
+                    horaPedido = cursor.getString(5),
+                    horaEntrega = cursor.getString(6),
+                    subtotal = cursor.getDouble(7),
+                    costoTransporte = cursor.getDouble(8),
+                    iva = cursor.getDouble(9),
+                    total = cursor.getDouble(10)
+                )
+            )
+        }
+        cursor.close()
+        return lista
+    }
+    fun obtenerPorRestauranteYEstado(restauranteId: Int, estado: String): List<Pedido> {
+        val db = dbHelper.readableDatabase
+        val lista = mutableListOf<Pedido>()
+        val cursor = db.rawQuery(
+            """
+        SELECT * FROM Pedido
+        WHERE restaurante_id = ? AND estado = ?
+        """.trimIndent(),
+            arrayOf(restauranteId.toString(), estado)
+        )
+        while (cursor.moveToNext()) {
+            lista.add(
+                Pedido(
+                    id = cursor.getInt(0),
+                    clienteId = cursor.getString(1),
+                    restauranteId = cursor.getInt(2),
+                    repartidorId = cursor.getString(3),
+                    estado = cursor.getString(4),
+                    horaPedido = cursor.getString(5),
+                    horaEntrega = cursor.getString(6),
+                    subtotal = cursor.getDouble(7),
+                    costoTransporte = cursor.getDouble(8),
+                    iva = cursor.getDouble(9),
+                    total = cursor.getDouble(10)
+                )
+            )
+        }
+        cursor.close()
+        return lista
+    }
+
+    fun obtenerCombosPorPedido(pedidoId: Int): List<Pair<Combo, Int>> {
+        val db = dbHelper.readableDatabase
+        val lista = mutableListOf<Pair<Combo, Int>>()
+
+        val query = """
+        SELECT c.id, c.numero, c.precio, c.descripcion, c.restaurante_id, pc.cantidad
+        FROM PedidoCombo pc
+        INNER JOIN Combo c ON c.id = pc.combo_id
+        WHERE pc.pedido_id = ?
+    """.trimIndent()
+
+        val cursor = db.rawQuery(query, arrayOf(pedidoId.toString()))
+        while (cursor.moveToNext()) {
+            val combo = Combo(
+                id = cursor.getInt(0),
+                numero = cursor.getInt(1),
+                precio = cursor.getDouble(2),
+                descripcion = cursor.getString(3),
+                restauranteId = cursor.getInt(4)
+            )
+            val cantidad = cursor.getInt(5)
+            lista.add(combo to cantidad)
+        }
+        cursor.close()
+        return lista
+    }
+
 
 
 

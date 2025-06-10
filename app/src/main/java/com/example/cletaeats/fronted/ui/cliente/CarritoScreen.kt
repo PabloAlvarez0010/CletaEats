@@ -64,7 +64,13 @@ fun CarritoScreen(
                 .padding(16.dp)
         ) {
             if (carrito.isEmpty()) {
-                Text("No hay combos en el carrito.")
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("No hay combos en el carrito.", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                }
                 return@Column
             }
 
