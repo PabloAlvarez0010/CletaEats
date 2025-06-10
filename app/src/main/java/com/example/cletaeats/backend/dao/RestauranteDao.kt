@@ -65,4 +65,18 @@ class RestauranteDAO(context: Context) {
         val db = dbHelper.writableDatabase
         return db.delete("Restaurante", "cedula_juridica = ?", arrayOf(cedulaJuridica)) > 0
     }
+
+    fun buscarPorId(id: Int): Restaurante? {
+        val db = dbHelper.readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM Restaurante WHERE id = ?", arrayOf(id.toString()))
+        return if (cursor.moveToFirst()) {
+            Restaurante(
+                id = cursor.getInt(cursor.getColumnIndexOrThrow("id")),
+                nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre")),
+                cedulaJuridica = cursor.getString(cursor.getColumnIndexOrThrow("cedula_juridica")),
+                direccion = cursor.getString(cursor.getColumnIndexOrThrow("direccion")),
+                tipoComida = cursor.getString(cursor.getColumnIndexOrThrow("tipo_comida"))
+            )
+        } else null
+    }
 }

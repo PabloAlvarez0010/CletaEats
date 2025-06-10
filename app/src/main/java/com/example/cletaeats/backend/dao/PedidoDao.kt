@@ -328,6 +328,14 @@ class PedidoDAO(context: Context) {
         }
         return db.update("Pedido", values, "id = ?", arrayOf(pedidoId.toString())) > 0
     }
+    fun marcarPedidoEntregado(pedidoId: Int): Boolean {
+        val db = dbHelper.writableDatabase
+        val values = ContentValues().apply {
+            put("estado", "entregado")
+            put("hora_entrega", java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(java.util.Date()))
+        }
+        return db.update("Pedido", values, "id = ?", arrayOf(pedidoId.toString())) > 0
+    }
 
     fun obtenerPedidosPendientesPorRestaurante(restauranteId: Int): List<Pedido> {
         val db = dbHelper.readableDatabase
@@ -368,6 +376,36 @@ class PedidoDAO(context: Context) {
         WHERE restaurante_id = ? AND estado = ?
         """.trimIndent(),
             arrayOf(restauranteId.toString(), estado)
+        )
+        while (cursor.moveToNext()) {
+            lista.add(
+                Pedido(
+                    id = cursor.getInt(0),
+                    clienteId = cursor.getString(1),
+                    restauranteId = cursor.getInt(2),
+                    repartidorId = cursor.getString(3),
+                    estado = cursor.getString(4),
+                    horaPedido = cursor.getString(5),
+                    horaEntrega = cursor.getString(6),
+                    subtotal = cursor.getDouble(7),
+                    costoTransporte = cursor.getDouble(8),
+                    iva = cursor.getDouble(9),
+                    total = cursor.getDouble(10)
+                )
+            )
+        }
+        cursor.close()
+        return lista
+    }
+    fun obtenerPorRepartidorYEstado(repartidorId: String, estado: String): List<Pedido> {
+        val db = dbHelper.readableDatabase
+        val lista = mutableListOf<Pedido>()
+        val cursor = db.rawQuery(
+            """
+        SELECT * FROM Pedido
+        WHERE repartidor_id = ? AND estado = ?
+        """.trimIndent(),
+            arrayOf(repartidorId, estado)
         )
         while (cursor.moveToNext()) {
             lista.add(

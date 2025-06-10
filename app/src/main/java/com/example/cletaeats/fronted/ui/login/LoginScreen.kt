@@ -94,6 +94,7 @@ fun LoginScreen(navController: NavController) {
                                 "admin" -> navController.navigate("adminHome/${usuario.cedula}")
                                 "cliente" -> navController.navigate("clienteHome/${usuario.cedula}")
                                 "restaurante" -> navController.navigate("restauranteHome/${usuario.cedula}")
+                                "repartidor" -> navController.navigate("repartidorHome/${usuario.cedula}")
                                 else -> navController.navigate("home/${usuario.rol}/${usuario.cedula}")
                             }
                             error = null
