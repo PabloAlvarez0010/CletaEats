@@ -1,5 +1,6 @@
 package com.example.cletaeats.fronted.ui.cliente
 
+import android.widget.Toast
 import androidx.compose.animation.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -21,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.cletaeats.R
 import com.example.cletaeats.backend.dao.ClienteDAO
@@ -37,7 +39,8 @@ private val UberBlack = Color(0xFF000000)
 private val UberGray = Color(0xFFF5F5F5)
 
 @Composable
-fun ClienteHomeScreen(navController: NavController, cedula: String) {
+fun ClienteHomeScreen(navController: NavController, cedula: String, carritoViewModel: CarritoViewModel) {
+
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -127,7 +130,7 @@ fun ClienteHomeScreen(navController: NavController, cedula: String) {
         backgroundColor = UberGray,
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { navController.navigate("carrito") },
+                onClick = { navController.navigate("carrito/${cliente?.cedula}") },
                 backgroundColor = UberGreen,
                 contentColor = Color.White
             ) {
@@ -166,12 +169,33 @@ fun ClienteHomeScreen(navController: NavController, cedula: String) {
                         ) {
                             Column(modifier = Modifier.padding(top = 12.dp)) {
                                 combosPorRestaurante[restaurante.id]?.forEach { combo ->
-                                    Text(
-                                        text = "Combo ${combo.numero}: ${combo.descripcion} - ₡${combo.precio}",
-                                        fontSize = 14.sp,
-                                        color = Color.White,
-                                        modifier = Modifier.padding(4.dp)
-                                    )
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(vertical = 4.dp),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Column(modifier = Modifier.weight(1f)) {
+                                            Text("Combo ${combo.numero}: ${combo.descripcion}", color = Color.White, fontSize = 14.sp)
+                                            Text("₡${combo.precio}", color = Color.White, fontSize = 14.sp)
+                                        }
+                                        Button(
+                                            onClick = {
+                                                val agregado = carritoViewModel.agregarCombo(combo)
+                                                Toast.makeText(context, if (agregado) "Agregado" else "No se puede mezclar restaurantes", Toast.LENGTH_SHORT).show()
+                                                if (!agregado) {
+                                                    scope.launch {
+                                                        scaffoldState.snackbarHostState.showSnackbar("No se pueden mezclar combos de distintos restaurantes")
+                                                    }
+                                                }
+                                            },
+                                            colors = ButtonDefaults.buttonColors(backgroundColor = Color.White)
+                                        ) {
+                                            Text("Agregar", color = UberGreen)
+                                        }
+                                    }
+
                                 }
                             }
                         }

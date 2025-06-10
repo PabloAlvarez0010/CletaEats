@@ -135,6 +135,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
         db.execSQL("INSERT INTO Usuario (cedula, clave, rol, verificado) VALUES ('222', '1234', 'cliente', 'no');")
         db.execSQL("INSERT INTO Usuario (cedula, clave, rol, verificado) VALUES ('444', '1234', 'repartidor', 'si');")
         db.execSQL("INSERT INTO Usuario (cedula, clave, rol, verificado) VALUES ('777', '1234', 'admin', 'si');")
+        db.execSQL("INSERT INTO Usuario (cedula, clave, rol, verificado) VALUES ('3101010101', '1234', 'restaurante', 'si');")
 
         db.execSQL("""
             INSERT INTO Restaurante (nombre, cedula_juridica, direccion, tipo_comida) VALUES

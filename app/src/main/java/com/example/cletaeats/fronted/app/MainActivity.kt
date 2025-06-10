@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.*
 import androidx.navigation.navArgument
@@ -23,10 +24,12 @@ import com.example.cletaeats.fronted.ui.admin.RepartidoresPendientesScreen
 import com.example.cletaeats.fronted.ui.admin.RepartidoresSinAmonestacionesScreen
 import com.example.cletaeats.fronted.ui.admin.RestaurantesPendientesScreen
 import com.example.cletaeats.fronted.ui.admin.RestaurantesTopPedidosScreen
+import com.example.cletaeats.fronted.ui.cliente.CarritoViewModel
 import com.example.cletaeats.fronted.ui.login.FormularioCliente
 import com.example.cletaeats.fronted.ui.login.FormularioRepartidor
 import com.example.cletaeats.fronted.ui.login.FormularioRestaurante
 import com.example.cletaeats.fronted.ui.login.SeleccionarRolRegistroScreen
+import com.example.cletaeats.fronted.ui.restaurante.RestauranteHomeScreen
 import com.example.cletaeats.ui.theme.CletaEatsTheme
 
 class MainActivity : ComponentActivity() {
@@ -46,27 +49,65 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun AppNavigator() {
     val navController = rememberNavController()
+    val carritoViewModel: CarritoViewModel = viewModel() // Instancia compartida del carrito
 
     NavHost(navController = navController, startDestination = "login") {
         composable("login") {
             LoginScreen(navController)
         }
-        // ✅ Ruta para el cliente
+
         composable(
             route = "clienteHome/{cedula}",
+            arguments = listOf(navArgument("cedula") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val cedula = backStackEntry.arguments?.getString("cedula") ?: ""
+            ClienteHomeScreen(
+                navController = navController,
+                cedula = cedula,
+                carritoViewModel = carritoViewModel // ← se pasa
+            )
+        }
+
+        composable(
+            route = "carrito/{cedulaCliente}",
+            arguments = listOf(navArgument("cedulaCliente") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val cedula = backStackEntry.arguments?.getString("cedulaCliente") ?: ""
+            CarritoScreen(
+                navController = navController,
+                cedulaCliente = cedula,
+                carritoViewModel = carritoViewModel // ← se pasa
+            )
+        }
+
+        // ✅ Ruta para el administrador
+        composable(
+            route = "adminHome/{cedula}",
             arguments = listOf(
                 navArgument("cedula") { type = NavType.StringType }
             )
         ) { backStackEntry ->
             val cedula = backStackEntry.arguments?.getString("cedula") ?: ""
-            ClienteHomeScreen(
+            AdminHomeScreen(
                 navController = navController,
+                nombre = "Administrador",
                 cedula = cedula
             )
         }
-        composable("carrito") {
-            CarritoScreen(navController)
+        // ✅ Ruta para el restaurante
+        composable(
+            route = "restauranteHome/{cedulaJuridica}",
+            arguments = listOf(
+                navArgument("cedulaJuridica") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val cedulaJuridica = backStackEntry.arguments?.getString("cedulaJuridica") ?: ""
+            RestauranteHomeScreen(
+                navController = navController,
+                cedulaJuridica = cedulaJuridica
+            )
         }
+
         composable("clientesActivosSuspendidos") {
             ListaClientesScreen(navController)
         }
@@ -109,11 +150,6 @@ fun AppNavigator() {
         composable("restaurantesPendientes") {
           RestaurantesPendientesScreen(navController)
         }
-
-
-
-
-
         /*composable(
             route = "home/{rol}/{cedula}",
             arguments = listOf(
@@ -126,19 +162,5 @@ fun AppNavigator() {
             HomeScreen(rol, cedula)
         }*/
 
-        // ✅ Ruta para el administrador
-        composable(
-            route = "adminHome/{cedula}",
-            arguments = listOf(
-                navArgument("cedula") { type = NavType.StringType }
-            )
-        ) { backStackEntry ->
-            val cedula = backStackEntry.arguments?.getString("cedula") ?: ""
-            AdminHomeScreen(
-                navController = navController,
-                nombre = "Administrador",
-                cedula = cedula
-            )
-        }
     }
 }

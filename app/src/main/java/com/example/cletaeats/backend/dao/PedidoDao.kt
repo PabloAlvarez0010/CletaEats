@@ -2,6 +2,7 @@ package com.example.cletaeats.backend.dao
 
 import android.content.ContentValues
 import android.content.Context
+import com.example.cletaeats.backend.model.Combo
 import com.example.cletaeats.backend.model.Pedido
 import com.example.cletaeats.backend.util.DatabaseHelper
 import java.sql.ResultSet
@@ -200,6 +201,70 @@ class PedidoDAO(context: Context) {
         cursor.close()
         return total
     }
+
+    fun crearPedidoDesdeCarrito(
+        cedulaCliente: String,
+        carrito: List<Pair<Combo, Int>>,
+        restauranteId: Int,
+        subtotal: Double,
+        transporte: Double,
+        iva: Double,
+        total: Double
+    ): Boolean {
+        val db = dbHelper.writableDatabase
+        db.beginTransaction()
+        try {
+            // Obtener repartidor disponible con menos de 4 amonestaciones
+            val repartidorId = run {
+                val cursor = db.rawQuery(
+                    "SELECT cedula FROM Repartidor WHERE estado = 'disponible' AND amonestaciones < 4 LIMIT 1",
+                    null
+                )
+                val result = if (cursor.moveToFirst()) cursor.getString(0) else null
+                cursor.close()
+                result
+            }
+
+            // Registrar hora actual como hora del pedido
+            val horaActual = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(java.util.Date())
+
+            // Insertar en tabla Pedido
+            val pedidoValues = ContentValues().apply {
+                put("cliente_id", cedulaCliente)
+                put("restaurante_id", restauranteId)
+                put("repartidor_id", repartidorId)
+                put("estado", "en preparación")
+                put("hora_pedido", horaActual)
+                put("hora_entrega", null as String?)
+                put("subtotal", subtotal)
+                put("costo_transporte", transporte)
+                put("iva", iva)
+                put("total", total)
+            }
+
+            val pedidoId = db.insert("Pedido", null, pedidoValues)
+            if (pedidoId == -1L) return false
+
+            // Insertar combos en PedidoCombo
+            for ((combo, cantidad) in carrito) {
+                val detalleValues = ContentValues().apply {
+                    put("pedido_id", pedidoId)
+                    put("combo_id", combo.id)
+                    put("cantidad", cantidad)
+                }
+                db.insert("PedidoCombo", null, detalleValues)
+            }
+
+            db.setTransactionSuccessful()
+            return true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return false
+        } finally {
+            db.endTransaction()
+        }
+    }
+
 
 
 }
