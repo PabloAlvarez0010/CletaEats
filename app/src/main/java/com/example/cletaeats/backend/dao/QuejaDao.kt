@@ -16,6 +16,7 @@ class QuejaDAO(context: Context) {
             put("descripcion", q.descripcion)
             put("fecha", q.fecha)
             put("calificacion", q.calificacion)
+            put("pedido_id", q.pedidoId)
         }
         return db.insert("Queja", null, values) > 0
     }
@@ -32,8 +33,10 @@ class QuejaDAO(context: Context) {
                     clienteId = cursor.getString(cursor.getColumnIndexOrThrow("cliente_id")),
                     descripcion = cursor.getString(cursor.getColumnIndexOrThrow("descripcion")),
                     fecha = cursor.getString(cursor.getColumnIndexOrThrow("fecha")),
-                    calificacion = cursor.getInt(cursor.getColumnIndexOrThrow("calificacion"))
-                )
+                    calificacion = cursor.getInt(cursor.getColumnIndexOrThrow("calificacion")),
+                    pedidoId = cursor.getInt(cursor.getColumnIndexOrThrow("pedido_id"))
+
+            )
             )
         }
         return lista
@@ -51,10 +54,20 @@ class QuejaDAO(context: Context) {
                     clienteId = cursor.getString(cursor.getColumnIndexOrThrow("cliente_id")),
                     descripcion = cursor.getString(cursor.getColumnIndexOrThrow("descripcion")),
                     fecha = cursor.getString(cursor.getColumnIndexOrThrow("fecha")),
-                    calificacion = cursor.getInt(cursor.getColumnIndexOrThrow("calificacion"))
+                    calificacion = cursor.getInt(cursor.getColumnIndexOrThrow("calificacion")),
+                    pedidoId = cursor.getInt(cursor.getColumnIndexOrThrow("pedido_id"))
                 )
             )
         }
         return lista
     }
+    fun existeQuejaPorPedido(pedidoId: Int): Boolean {
+        val db = dbHelper.readableDatabase
+        val cursor = db.rawQuery("SELECT 1 FROM Queja WHERE pedido_id = ?", arrayOf(pedidoId.toString()))
+        val existe = cursor.moveToFirst()
+        cursor.close()
+        return existe
+    }
+
+
 }

@@ -6,5 +6,6 @@ data class Queja(
     val clienteId: String,
     val descripcion: String,
     val fecha: String,
-    val calificacion: Int
+    val calificacion: Int,
+    val pedidoId: Int? = null
 )

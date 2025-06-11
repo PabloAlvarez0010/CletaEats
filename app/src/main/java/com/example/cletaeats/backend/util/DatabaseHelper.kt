@@ -97,8 +97,10 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
                 descripcion TEXT NOT NULL,
                 fecha TEXT NOT NULL,
                 calificacion INTEGER,
+                pedido_id INTEGER UNIQUE,
                 FOREIGN KEY (repartidor_id) REFERENCES Repartidor(cedula),
-                FOREIGN KEY (cliente_id) REFERENCES Cliente(cedula)
+                FOREIGN KEY (cliente_id) REFERENCES Cliente(cedula),
+                FOREIGN KEY (pedido_id) REFERENCES Pedido(id)
             );
         """.trimIndent())
 
