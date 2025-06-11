@@ -7,10 +7,13 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.cletaeats.backend.dao.RestauranteDAO
 import com.example.cletaeats.backend.dao.UsuarioDAO
@@ -42,12 +45,19 @@ fun RestaurantesPendientesScreen(navController: NavController) {
             )
         }
     ) { padding ->
-        LazyColumn(modifier = Modifier.padding(padding).padding(16.dp)) {
-            if (restaurantesPendientes.isEmpty()) {
-                item {
-                    Text("No hay restaurantes pendientes de verificación.")
-                }
-            } else {
+        if (restaurantesPendientes.isEmpty()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(16.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("No hay pendientes de verificación.", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            }
+        }
+        else {
+            LazyColumn(modifier = Modifier.padding(padding).padding(16.dp)) {
                 items(restaurantesPendientes) { restaurante ->
                     Card(
                         backgroundColor = Color(0xFF06C167),

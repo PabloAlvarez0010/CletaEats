@@ -118,13 +118,13 @@ fun AdminHomeScreen(navController: NavController, nombre: String, cedula: String
                         expanded = pedidoExpanded,
                         onToggle = { pedidoExpanded = !pedidoExpanded },
                         subOptions = listOf(
-                            "Incluir pedido",
                             "Pedidos por cliente",
+                            "Clientes con más pedidos",
                             "Hora pico"
                         )
                     )
 
-                    ExpandableDrawerOption(
+                    /*ExpandableDrawerOption(
                         navController = navController,
                         title = "Reportes",
                         expanded = reporteExpanded,
@@ -133,7 +133,7 @@ fun AdminHomeScreen(navController: NavController, nombre: String, cedula: String
                             "Generar reporte general",
                             "Generar rúbrica"
                         )
-                    )
+                    )*/
 
                     Spacer(modifier = Modifier.weight(1f))
                     Divider()
@@ -157,8 +157,28 @@ fun AdminHomeScreen(navController: NavController, nombre: String, cedula: String
                 .padding(it),
             contentAlignment = Alignment.Center
         ) {
-            Text("Seleccione una opción del menú", fontSize = 18.sp)
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.cletaeats2),
+                    contentDescription = "Logo CletaEats",
+                    modifier = Modifier
+                        .size(560.dp)
+                        .padding(bottom = 24.dp)
+                )
+                Text(
+                    "Seleccione una opción del menú",
+                    fontSize = 20.sp,
+                    color = UberBlack,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
+
+
     }
 }
 
