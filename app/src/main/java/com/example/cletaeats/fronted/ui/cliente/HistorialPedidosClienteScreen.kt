@@ -27,9 +27,7 @@ fun HistorialPedidosClienteScreen(navController: NavController, cedulaCliente: S
     val pedidoDAO = remember { PedidoDAO(context) }
     val quejaDAO = remember { QuejaDAO(context) }
 
-    val historial = remember {
-        pedidoDAO.obtenerHistorialEntregadoPorCliente(cedulaCliente)
-    }
+    val historial = remember { pedidoDAO.obtenerHistorialEntregadoPorCliente(cedulaCliente) }
 
     var mostrarDialogo by remember { mutableStateOf(false) }
     var descripcion by remember { mutableStateOf("") }
@@ -61,6 +59,8 @@ fun HistorialPedidosClienteScreen(navController: NavController, cedulaCliente: S
                 }
             } else {
                 items(historial) { pedido ->
+                    val yaExiste = remember { quejaDAO.existeQuejaPorPedido(pedido.id) }
+
                     Card(modifier = Modifier.padding(vertical = 8.dp)) {
                         Column(modifier = Modifier.padding(12.dp)) {
                             Text("Restaurante: ${pedido.restaurante} (${pedido.tipoComida})", fontWeight = FontWeight.Bold)
@@ -83,7 +83,6 @@ fun HistorialPedidosClienteScreen(navController: NavController, cedulaCliente: S
                             Spacer(modifier = Modifier.height(12.dp))
                             Button(
                                 onClick = {
-                                    val yaExiste = quejaDAO.existeQuejaPorPedido(pedido.id)
                                     if (yaExiste) {
                                         Toast.makeText(context, "Ya se calificó este pedido.", Toast.LENGTH_SHORT).show()
                                     } else {
@@ -92,10 +91,18 @@ fun HistorialPedidosClienteScreen(navController: NavController, cedulaCliente: S
                                         mostrarDialogo = true
                                     }
                                 },
-                                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF06C167)),
+                                enabled = !yaExiste,
+                                colors = ButtonDefaults.buttonColors(
+                                    backgroundColor = if (yaExiste) Color.Gray else Color(0xFF06C167)
+                                ),
                                 modifier = Modifier.align(Alignment.End)
                             ) {
                                 Text("Calificar Repartidor", color = Color.White)
+                            }
+
+                            if (yaExiste) {
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text("Ya calificado", color = Color.Gray, fontSize = MaterialTheme.typography.caption.fontSize)
                             }
                         }
                     }
@@ -103,7 +110,6 @@ fun HistorialPedidosClienteScreen(navController: NavController, cedulaCliente: S
             }
         }
 
-        // Diálogo emergente
         if (mostrarDialogo) {
             AlertDialog(
                 onDismissRequest = { mostrarDialogo = false },

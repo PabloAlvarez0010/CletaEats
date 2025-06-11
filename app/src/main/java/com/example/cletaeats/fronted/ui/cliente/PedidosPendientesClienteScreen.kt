@@ -24,7 +24,7 @@ fun PedidosPendientesClienteScreen(navController: NavController, cedulaCliente: 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Historial de Pedidos", color = Color.White) },
+                title = { Text("Pedidos pendientes", color = Color.White) },
                 backgroundColor = Color(0xFF000000),
                 navigationIcon = {
                     IconButton(onClick = {
