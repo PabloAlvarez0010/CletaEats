@@ -97,7 +97,7 @@ fun RepartidorHomeScreen(navController: NavController, cedula: String) {
                         navController.navigate("historialPedidosRepartidor/${repartidor?.cedula ?: ""}")
                     }
                     DrawerOption("Ver quejas") {
-                        // TODO: implementar después
+                        navController.navigate("quejasRepartidor/${repartidor?.cedula ?: ""}")
                     }
                     Spacer(modifier = Modifier.weight(1f))
                     Divider()

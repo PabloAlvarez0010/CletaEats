@@ -32,6 +32,7 @@ import com.example.cletaeats.fronted.ui.login.FormularioRepartidor
 import com.example.cletaeats.fronted.ui.login.FormularioRestaurante
 import com.example.cletaeats.fronted.ui.login.SeleccionarRolRegistroScreen
 import com.example.cletaeats.fronted.ui.repartidor.HistorialPedidosRepartidorScreen
+import com.example.cletaeats.fronted.ui.repartidor.QuejasRepartidorScreen
 import com.example.cletaeats.fronted.ui.repartidor.RepartidorHomeScreen
 import com.example.cletaeats.fronted.ui.restaurante.PedidosPendientesScreen
 import com.example.cletaeats.fronted.ui.restaurante.PedidosPreparadosScreen
@@ -198,6 +199,12 @@ fun AppNavigator() {
             val cedula = backStackEntry.arguments?.getString("cedula") ?: ""
             HistorialPedidosRepartidorScreen(cedulaRepartidor = cedula, navController = navController)
         }
+        composable("quejasRepartidor/{cedula}") {
+            val cedula = it.arguments?.getString("cedula") ?: ""
+            QuejasRepartidorScreen(navController, cedula)
+        }
+
+
 
 
 
