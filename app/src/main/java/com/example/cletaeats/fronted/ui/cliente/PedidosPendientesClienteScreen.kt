@@ -16,7 +16,7 @@ import androidx.navigation.NavController
 import com.example.cletaeats.backend.dao.PedidoDAO
 
 @Composable
-fun HistorialPedidosScreen(navController: NavController, cedulaCliente: String) {
+fun PedidosPendientesClienteScreen(navController: NavController, cedulaCliente: String) {
     val context = LocalContext.current
     val pedidoDAO = remember { PedidoDAO(context) }
     val historial = remember { pedidoDAO.obtenerHistorialPedidosPorCliente(cedulaCliente) }
