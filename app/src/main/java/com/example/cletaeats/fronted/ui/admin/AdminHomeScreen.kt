@@ -119,7 +119,7 @@ fun AdminHomeScreen(navController: NavController, nombre: String, cedula: String
                         onToggle = { pedidoExpanded = !pedidoExpanded },
                         subOptions = listOf(
                             "Pedidos por cliente",
-                            "Clientes con más pedidos",
+                            "Cliente con más pedidos2",
                             "Hora pico"
                         )
                     )
@@ -243,7 +243,15 @@ fun ExpandableDrawerOption(
                             "Incluir repartidor" -> {
                                 navController.navigate("repartidoresPendientes")
                             }
-
+                            "Pedidos por cliente" -> {
+                                navController.navigate("pedidosPorCliente")
+                            }
+                            "Cliente con más pedidos2" -> {
+                                navController.navigate("clientesTopPedidos2")
+                            }
+                            "Hora pico" -> {
+                                navController.navigate("horaPico")
+                            }
                             else -> {
                                 println("Seleccionado: $item")
                             }

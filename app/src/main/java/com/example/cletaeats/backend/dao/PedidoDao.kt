@@ -3,6 +3,7 @@ package com.example.cletaeats.backend.dao
 import android.content.ContentValues
 import android.content.Context
 import androidx.core.database.getStringOrNull
+import com.example.cletaeats.backend.model.ClientePedidos
 import com.example.cletaeats.backend.model.Combo
 import com.example.cletaeats.backend.model.ComboDetalle
 import com.example.cletaeats.backend.model.Pedido
@@ -543,7 +544,98 @@ class PedidoDAO(context: Context) {
         cursor.close()
         return lista
     }
+    fun obtenerClientesConMasPedidos(): List<ClientePedidos> {
+        val db = dbHelper.readableDatabase
+        val resultado = mutableListOf<ClientePedidos>()
 
+        // Paso 1: contar pedidos por cliente
+        val conteoCursor = db.rawQuery("""
+        SELECT c.cedula, c.nombre, COUNT(p.id) as cantidad
+        FROM Pedido p
+        JOIN Cliente c ON p.cliente_id = c.cedula
+        WHERE p.estado = 'entregado'
+        GROUP BY c.cedula
+        ORDER BY cantidad DESC
+    """.trimIndent(), null)
+
+        if (!conteoCursor.moveToFirst()) return emptyList()
+
+        val maxCantidad = conteoCursor.getInt(conteoCursor.getColumnIndexOrThrow("cantidad"))
+
+        // Paso 2: filtrar todos los clientes que tienen esa misma cantidad
+        do {
+            val cantidad = conteoCursor.getInt(conteoCursor.getColumnIndexOrThrow("cantidad"))
+            if (cantidad < maxCantidad) break
+
+            val cedulaCliente = conteoCursor.getString(conteoCursor.getColumnIndexOrThrow("cedula"))
+            val nombreCliente = conteoCursor.getString(conteoCursor.getColumnIndexOrThrow("nombre"))
+
+            // Paso 3: obtener restaurantes únicos para ese cliente
+            val restaurantesCursor = db.rawQuery("""
+            SELECT DISTINCT r.nombre
+            FROM Pedido p
+            JOIN Restaurante r ON p.restaurante_id = r.id
+            WHERE p.cliente_id = ? AND p.estado = 'entregado'
+        """.trimIndent(), arrayOf(cedulaCliente))
+
+            val restaurantes = mutableListOf<String>()
+            while (restaurantesCursor.moveToNext()) {
+                restaurantes.add(restaurantesCursor.getString(0))
+            }
+            restaurantesCursor.close()
+
+            resultado.add(
+                ClientePedidos(
+                    clienteNombre = nombreCliente,
+                    cantidadPedidos = cantidad,
+                    restaurantes = restaurantes
+                )
+            )
+        } while (conteoCursor.moveToNext())
+
+        conteoCursor.close()
+        return resultado
+    }
+
+    fun obtenerHoraPico(): Pair<String, Int>? {
+        val db = dbHelper.readableDatabase
+
+        val cursor = db.rawQuery("""
+        SELECT strftime('%H', hora_pedido) AS hora, COUNT(*) as total
+        FROM Pedido
+        WHERE estado = 'entregado'
+        GROUP BY hora
+        ORDER BY total DESC
+        LIMIT 1
+    """.trimIndent(), null)
+
+        var resultado: Pair<String, Int>? = null
+        if (cursor.moveToFirst()) {
+            val hora = cursor.getString(cursor.getColumnIndexOrThrow("hora"))
+            val total = cursor.getInt(cursor.getColumnIndexOrThrow("total"))
+            resultado = Pair(hora, total)
+        }
+        cursor.close()
+        return resultado
+    }
+    fun obtenerPedidosPorHora(): Map<Int, Int> {
+        val db = dbHelper.readableDatabase
+        val resultado = mutableMapOf<Int, Int>()
+        val cursor = db.rawQuery("""
+        SELECT strftime('%H', hora_pedido) AS hora, COUNT(*) 
+        FROM Pedido
+        GROUP BY hora
+        ORDER BY hora
+    """.trimIndent(), null)
+
+        while (cursor.moveToNext()) {
+            val hora = cursor.getString(0)?.toIntOrNull() ?: continue
+            val cantidad = cursor.getInt(1)
+            resultado[hora] = cantidad
+        }
+        cursor.close()
+        return resultado
+    }
 
 
 

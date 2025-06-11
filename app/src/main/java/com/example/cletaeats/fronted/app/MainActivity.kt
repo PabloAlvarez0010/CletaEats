@@ -16,9 +16,12 @@ import com.example.cletaeats.fronted.ui.cliente.CarritoScreen
 import com.example.cletaeats.fronted.ui.cliente.ClienteHomeScreen
 import com.example.cletaeats.fronted.ui.login.LoginScreen
 import com.example.cletaeats.fronted.ui.admin.ClientesTopPedidosScreen
+import com.example.cletaeats.fronted.ui.admin.ClientesTopPedidosScreen2
+import com.example.cletaeats.fronted.ui.admin.HoraPicoScreen
 import com.example.cletaeats.fronted.ui.admin.ListaClientesScreen
 import com.example.cletaeats.fronted.ui.admin.MontoTotalGeneralScreen
 import com.example.cletaeats.fronted.ui.admin.MontoTotalPorRestauranteScreen
+import com.example.cletaeats.fronted.ui.admin.PedidosPorClienteScreen
 import com.example.cletaeats.fronted.ui.admin.QuejasPorRepartidorScreen
 import com.example.cletaeats.fronted.ui.admin.RepartidoresPendientesScreen
 import com.example.cletaeats.fronted.ui.admin.RepartidoresSinAmonestacionesScreen
@@ -173,6 +176,13 @@ fun AppNavigator() {
             val cedulaCliente = backStackEntry.arguments?.getString("cedulaCliente") ?: ""
             HistorialPedidosClienteScreen(navController, cedulaCliente)
         }
+        composable("clientesTopPedidos2") {
+            ClientesTopPedidosScreen2()
+        }
+        composable("horaPico") {
+            HoraPicoScreen(navController)
+        }
+
 
 
 
@@ -205,6 +215,9 @@ fun AppNavigator() {
         }
 
 
+        composable("pedidosPorCliente") {
+            PedidosPorClienteScreen(navController)
+        }
 
 
 
