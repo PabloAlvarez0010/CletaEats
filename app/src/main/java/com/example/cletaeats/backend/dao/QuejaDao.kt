@@ -15,6 +15,7 @@ class QuejaDAO(context: Context) {
             put("cliente_id", q.clienteId)
             put("descripcion", q.descripcion)
             put("fecha", q.fecha)
+            put("calificacion", q.calificacion)
         }
         return db.insert("Queja", null, values) > 0
     }
@@ -30,7 +31,8 @@ class QuejaDAO(context: Context) {
                     repartidorId = cursor.getString(cursor.getColumnIndexOrThrow("repartidor_id")),
                     clienteId = cursor.getString(cursor.getColumnIndexOrThrow("cliente_id")),
                     descripcion = cursor.getString(cursor.getColumnIndexOrThrow("descripcion")),
-                    fecha = cursor.getString(cursor.getColumnIndexOrThrow("fecha"))
+                    fecha = cursor.getString(cursor.getColumnIndexOrThrow("fecha")),
+                    calificacion = cursor.getInt(cursor.getColumnIndexOrThrow("calificacion"))
                 )
             )
         }
@@ -48,7 +50,8 @@ class QuejaDAO(context: Context) {
                     repartidorId = cursor.getString(cursor.getColumnIndexOrThrow("repartidor_id")),
                     clienteId = cursor.getString(cursor.getColumnIndexOrThrow("cliente_id")),
                     descripcion = cursor.getString(cursor.getColumnIndexOrThrow("descripcion")),
-                    fecha = cursor.getString(cursor.getColumnIndexOrThrow("fecha"))
+                    fecha = cursor.getString(cursor.getColumnIndexOrThrow("fecha")),
+                    calificacion = cursor.getInt(cursor.getColumnIndexOrThrow("calificacion"))
                 )
             )
         }

@@ -8,5 +8,8 @@ data class PedidoDetalle(
     val total: Double,
     val restaurante: String,
     val tipoComida: String,
-    val combos: List<ComboDetalle>
+    val combos: List<ComboDetalle>,
+    val repartidorNombre: String? = null,
+    val repartidorCedula: String? = null
+
 )

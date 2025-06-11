@@ -111,8 +111,9 @@ fun ClienteHomeScreen(navController: NavController, cedula: String, carritoViewM
                         navController.navigate("PedidosPendientesCliente/${cliente?.cedula}")
                     }
                     DrawerOption("Historial de pedidos") {
-                        // TODO: Navegar a quejas
+                        navController.navigate("HistorialPedidosCliente/${cliente?.cedula}")
                     }
+
                     Spacer(modifier = Modifier.weight(1f))
                     Divider()
                     DrawerOption(

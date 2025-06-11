@@ -2,6 +2,7 @@ package com.example.cletaeats.backend.dao
 
 import android.content.ContentValues
 import android.content.Context
+import androidx.core.database.getStringOrNull
 import com.example.cletaeats.backend.model.Combo
 import com.example.cletaeats.backend.model.ComboDetalle
 import com.example.cletaeats.backend.model.Pedido
@@ -319,6 +320,63 @@ class PedidoDAO(context: Context) {
         pedidoCursor.close()
         return pedidos
     }
+    fun obtenerHistorialEntregadoPorCliente(cedulaCliente: String): List<PedidoDetalle> {
+        val db = dbHelper.readableDatabase
+        val pedidos = mutableListOf<PedidoDetalle>()
+
+        val pedidoCursor = db.rawQuery("""
+        SELECT p.id, p.estado, p.hora_pedido, p.hora_entrega, p.total,
+               r.nombre AS nombreRestaurante, r.tipo_comida AS tipoComida,
+               rep.nombre AS nombreRepartidor, rep.cedula AS cedulaRepartidor
+        FROM Pedido p
+        JOIN Restaurante r ON p.restaurante_id = r.id
+        LEFT JOIN Repartidor rep ON p.repartidor_id = rep.cedula
+        WHERE p.cliente_id = ? AND p.estado = 'entregado'
+        ORDER BY p.hora_pedido DESC
+    """.trimIndent(), arrayOf(cedulaCliente))
+
+        while (pedidoCursor.moveToNext()) {
+            val pedidoId = pedidoCursor.getInt(0)
+            val combos = mutableListOf<ComboDetalle>()
+
+            val comboCursor = db.rawQuery("""
+            SELECT c.numero, c.descripcion, c.precio, pc.cantidad
+            FROM PedidoCombo pc
+            JOIN Combo c ON pc.combo_id = c.id
+            WHERE pc.pedido_id = ?
+        """.trimIndent(), arrayOf(pedidoId.toString()))
+
+            while (comboCursor.moveToNext()) {
+                combos.add(
+                    ComboDetalle(
+                        numero = comboCursor.getInt(0),
+                        descripcion = comboCursor.getString(1),
+                        precio = comboCursor.getDouble(2),
+                        cantidad = comboCursor.getInt(3)
+                    )
+                )
+            }
+            comboCursor.close()
+
+            pedidos.add(
+                PedidoDetalle(
+                    id = pedidoId,
+                    estado = pedidoCursor.getString(1),
+                    horaPedido = pedidoCursor.getString(2),
+                    horaEntrega = pedidoCursor.getString(3),
+                    total = pedidoCursor.getDouble(4),
+                    restaurante = pedidoCursor.getString(5),
+                    tipoComida = pedidoCursor.getString(6),
+                    combos = combos,
+                    repartidorNombre = pedidoCursor.getStringOrNull(7),
+                    repartidorCedula = pedidoCursor.getStringOrNull(8)
+                )
+            )
+        }
+        pedidoCursor.close()
+        return pedidos
+    }
+
 
     fun marcarPedidoEnCamino(pedidoId: Int, repartidorId: String): Boolean {
         val db = dbHelper.writableDatabase
