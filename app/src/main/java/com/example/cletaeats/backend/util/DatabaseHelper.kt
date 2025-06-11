@@ -96,6 +96,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
                 cliente_id TEXT NOT NULL,
                 descripcion TEXT NOT NULL,
                 fecha TEXT NOT NULL,
+                calificacion INTEGER,
                 FOREIGN KEY (repartidor_id) REFERENCES Repartidor(cedula),
                 FOREIGN KEY (cliente_id) REFERENCES Cliente(cedula)
             );

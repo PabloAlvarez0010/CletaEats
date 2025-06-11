@@ -428,6 +428,37 @@ class PedidoDAO(context: Context) {
         return lista
     }
 
+    fun obtenerPedidosEntregadosPorRepartidor(cedula: String): List<Pedido> {
+        val pedidos = mutableListOf<Pedido>()
+        val db = dbHelper.readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT * FROM Pedido WHERE repartidor_id = ? AND estado = 'entregado'",
+            arrayOf(cedula)
+        )
+
+        while (cursor.moveToNext()) {
+            pedidos.add(
+                Pedido(
+                    id = cursor.getInt(cursor.getColumnIndexOrThrow("id")),
+                    clienteId = cursor.getString(cursor.getColumnIndexOrThrow("cliente_id")),
+                    restauranteId = cursor.getInt(cursor.getColumnIndexOrThrow("restaurante_id")),
+                    repartidorId = cursor.getString(cursor.getColumnIndexOrThrow("repartidor_id")),
+                    estado = cursor.getString(cursor.getColumnIndexOrThrow("estado")),
+                    horaPedido = cursor.getString(cursor.getColumnIndexOrThrow("hora_pedido")),
+                    horaEntrega = cursor.getString(cursor.getColumnIndexOrThrow("hora_entrega")),
+                    subtotal = cursor.getDouble(cursor.getColumnIndexOrThrow("subtotal")),
+                    costoTransporte = cursor.getDouble(cursor.getColumnIndexOrThrow("costo_transporte")),
+                    iva = cursor.getDouble(cursor.getColumnIndexOrThrow("iva")),
+                    total = cursor.getDouble(cursor.getColumnIndexOrThrow("total"))
+                )
+            )
+        }
+
+        cursor.close()
+        return pedidos
+    }
+
+
     fun obtenerCombosPorPedido(pedidoId: Int): List<Pair<Combo, Int>> {
         val db = dbHelper.readableDatabase
         val lista = mutableListOf<Pair<Combo, Int>>()

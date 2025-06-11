@@ -94,7 +94,7 @@ fun RepartidorHomeScreen(navController: NavController, cedula: String) {
                 // Menú lateral
                 Column(modifier = Modifier.background(UberGreen).fillMaxSize()) {
                     DrawerOption("Historial de pedidos") {
-                        // TODO: implementar después
+                        navController.navigate("historialPedidosRepartidor/${repartidor?.cedula ?: ""}")
                     }
                     DrawerOption("Ver quejas") {
                         // TODO: implementar después
