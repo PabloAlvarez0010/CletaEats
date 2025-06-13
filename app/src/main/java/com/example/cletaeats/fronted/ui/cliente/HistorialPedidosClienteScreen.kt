@@ -7,6 +7,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.cletaeats.backend.dao.PedidoDAO
 import com.example.cletaeats.backend.dao.QuejaDAO
@@ -28,10 +31,20 @@ fun HistorialPedidosClienteScreen(navController: NavController, cedulaCliente: S
     val quejaDAO = remember { QuejaDAO(context) }
 
     val historial = remember { pedidoDAO.obtenerHistorialEntregadoPorCliente(cedulaCliente) }
+    val pedidosYaCalificados = remember { mutableStateListOf<Int>() }
+
+    // Inicializar lista de pedidos ya calificados
+    LaunchedEffect(Unit) {
+        historial.forEach {
+            if (quejaDAO.existeQuejaPorPedido(it.id)) {
+                pedidosYaCalificados.add(it.id)
+            }
+        }
+    }
 
     var mostrarDialogo by remember { mutableStateOf(false) }
     var descripcion by remember { mutableStateOf("") }
-    var calificacion by remember { mutableStateOf(0f) }
+    var calificacion by remember { mutableStateOf(0) }
     var repartidorActual by remember { mutableStateOf<String?>(null) }
     var pedidoActualId by remember { mutableStateOf<Int?>(null) }
 
@@ -48,18 +61,25 @@ fun HistorialPedidosClienteScreen(navController: NavController, cedulaCliente: S
             )
         }
     ) { padding ->
-        LazyColumn(
-            modifier = Modifier
-                .padding(padding)
-                .padding(16.dp)
-        ) {
-            if (historial.isEmpty()) {
-                item {
-                    Text("No hay pedidos entregados aún.", style = MaterialTheme.typography.body1)
-                }
-            } else {
+        if (historial.isEmpty()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(16.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("No hay pedidos entregados aún.", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            }
+        }
+        else {
+            LazyColumn(
+                modifier = Modifier
+                    .padding(padding)
+                    .padding(16.dp)
+            ) {
                 items(historial) { pedido ->
-                    val yaExiste = remember { quejaDAO.existeQuejaPorPedido(pedido.id) }
+                    val yaExiste = pedido.id in pedidosYaCalificados
 
                     Card(modifier = Modifier.padding(vertical = 8.dp)) {
                         Column(modifier = Modifier.padding(12.dp)) {
@@ -83,13 +103,9 @@ fun HistorialPedidosClienteScreen(navController: NavController, cedulaCliente: S
                             Spacer(modifier = Modifier.height(12.dp))
                             Button(
                                 onClick = {
-                                    if (yaExiste) {
-                                        Toast.makeText(context, "Ya se calificó este pedido.", Toast.LENGTH_SHORT).show()
-                                    } else {
-                                        repartidorActual = pedido.repartidorCedula
-                                        pedidoActualId = pedido.id
-                                        mostrarDialogo = true
-                                    }
+                                    repartidorActual = pedido.repartidorCedula
+                                    pedidoActualId = pedido.id
+                                    mostrarDialogo = true
                                 },
                                 enabled = !yaExiste,
                                 colors = ButtonDefaults.buttonColors(
@@ -110,6 +126,7 @@ fun HistorialPedidosClienteScreen(navController: NavController, cedulaCliente: S
             }
         }
 
+        // Diálogo emergente
         if (mostrarDialogo) {
             AlertDialog(
                 onDismissRequest = { mostrarDialogo = false },
@@ -124,13 +141,22 @@ fun HistorialPedidosClienteScreen(navController: NavController, cedulaCliente: S
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                         Text("Calificación:")
-                        Slider(
-                            value = calificacion,
-                            onValueChange = { calificacion = it },
-                            valueRange = 1f..5f,
-                            steps = 3
-                        )
-                        Text("Valor: ${calificacion.toInt()}")
+                        Row(modifier = Modifier.padding(vertical = 8.dp)) {
+                            for (i in 1..5) {
+                                IconToggleButton(
+                                    checked = i <= calificacion,
+                                    onCheckedChange = {
+                                        calificacion = i
+                                    }
+                                ) {
+                                    Icon(
+                                        imageVector = if (i <= calificacion) Icons.Filled.Star else Icons.Outlined.Star,
+                                        contentDescription = "Estrella $i",
+                                        tint = if (i <= calificacion) Color(0xFFFFC107) else Color.Gray
+                                    )
+                                }
+                            }
+                        }
                     }
                 },
                 confirmButton = {
@@ -141,19 +167,20 @@ fun HistorialPedidosClienteScreen(navController: NavController, cedulaCliente: S
                                 clienteId = cedulaCliente,
                                 descripcion = descripcion,
                                 fecha = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date()),
-                                calificacion = calificacion.toInt(),
+                                calificacion = calificacion,
                                 pedidoId = pedidoActualId
                             )
                             val exito = quejaDAO.insertar(queja)
                             if (exito) {
                                 Toast.makeText(context, "Calificación enviada", Toast.LENGTH_SHORT).show()
+                                pedidosYaCalificados.add(pedidoActualId!!)
                             } else {
                                 Toast.makeText(context, "Error al guardar", Toast.LENGTH_SHORT).show()
                             }
                         }
                         mostrarDialogo = false
                         descripcion = ""
-                        calificacion = 0f
+                        calificacion = 0
                     }) {
                         Text("Enviar")
                     }
