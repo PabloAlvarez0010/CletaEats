@@ -49,6 +49,11 @@ fun ClienteHomeScreen(navController: NavController, cedula: String, carritoViewM
     val restauranteDAO = remember { RestauranteDAO(context) }
     val comboDAO = remember { ComboDAO(context) }
 
+    var mostrarDialogoCantidad by remember { mutableStateOf(false) }
+    var comboSeleccionado by remember { mutableStateOf<Combo?>(null) }
+    var cantidadTexto by remember { mutableStateOf("1") }
+
+
     val cliente by remember {
         mutableStateOf(clienteDAO.buscarPorCedula(cedula))
     }
@@ -183,18 +188,23 @@ fun ClienteHomeScreen(navController: NavController, cedula: String, carritoViewM
                                         }
                                         Button(
                                             onClick = {
-                                                val agregado = carritoViewModel.agregarCombo(combo)
-                                                Toast.makeText(context, if (agregado) "Agregado" else "No se puede mezclar restaurantes", Toast.LENGTH_SHORT).show()
-                                                if (!agregado) {
-                                                    scope.launch {
-                                                        scaffoldState.snackbarHostState.showSnackbar("No se pueden mezclar combos de distintos restaurantes")
-                                                    }
+                                                if (carritoViewModel.restauranteIdActual == null || carritoViewModel.restauranteIdActual == combo.restauranteId) {
+                                                    comboSeleccionado = combo
+                                                    cantidadTexto = "1"
+                                                    mostrarDialogoCantidad = true
+                                                } else {
+                                                    Toast.makeText(
+                                                        context,
+                                                        "No puede agregar combos de diferentes restaurantes.",
+                                                        Toast.LENGTH_LONG
+                                                    ).show()
                                                 }
                                             },
                                             colors = ButtonDefaults.buttonColors(backgroundColor = Color.White)
                                         ) {
                                             Text("Agregar", color = UberGreen)
                                         }
+
                                     }
 
                                 }
@@ -203,6 +213,59 @@ fun ClienteHomeScreen(navController: NavController, cedula: String, carritoViewM
                     }
                 }
             }
+        }
+        if (mostrarDialogoCantidad && comboSeleccionado != null) {
+            AlertDialog(
+                onDismissRequest = {
+                    mostrarDialogoCantidad = false
+                    cantidadTexto = "1"
+                },
+                title = { Text("Cantidad de Combos") },
+                text = {
+                    Column {
+                        Text("¿Cuántos combos de ${comboSeleccionado?.descripcion} desea agregar?")
+                        Spacer(modifier = Modifier.height(12.dp))
+                        OutlinedTextField(
+                            value = cantidadTexto,
+                            onValueChange = {
+                                if (it.length <= 2 && it.all { char -> char.isDigit() }) {
+                                    cantidadTexto = it
+                                }
+                            },
+                            label = { Text("Cantidad") }
+                        )
+                    }
+                },
+                confirmButton = {
+                    Button(onClick = {
+                        val cantidad = cantidadTexto.toIntOrNull()?.coerceIn(1, 10) ?: 1
+                        if (cliente?.cedula?.let { clienteDAO.clienteActivo(it) } == true) {
+                            repeat(cantidad) {
+                                carritoViewModel.agregarCombo(comboSeleccionado!!)
+                            }
+                            Toast.makeText(context, "Agregado al carrito", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(
+                                context,
+                                "No puede realizar pedidos porque su cuenta está suspendida",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                        mostrarDialogoCantidad = false
+                        cantidadTexto = "1"
+                    }) {
+                        Text("Aceptar")
+                    }
+                },
+                dismissButton = {
+                    OutlinedButton(onClick = {
+                        mostrarDialogoCantidad = false
+                        cantidadTexto = "1"
+                    }) {
+                        Text("Cancelar")
+                    }
+                }
+            )
         }
     }
 }

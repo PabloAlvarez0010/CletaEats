@@ -21,7 +21,20 @@ class CarritoViewModel : ViewModel() {
         }
         return false // Otro restaurante
     }
-
+    fun eliminarCombo(combo: Combo) {
+        val index = carrito.indexOfFirst { it.first.id == combo.id }
+        if (index >= 0) {
+            if (carrito[index].second > 1) {
+                carrito[index] = carrito[index].copy(second = carrito[index].second - 1)
+            } else {
+                carrito.removeAt(index)
+            }
+        }
+        // Si el carrito quedó vacío, limpiar restauranteIdActual también
+        if (carrito.isEmpty()) {
+            restauranteIdActual = null
+        }
+    }
     fun limpiar() {
         carrito.clear()
         restauranteIdActual = null

@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -82,14 +83,36 @@ fun CarritoScreen(
                             .padding(vertical = 6.dp),
                         elevation = 4.dp
                     ) {
-                        Column(modifier = Modifier.padding(12.dp)) {
-                            Text("Combo ${combo.numero}: ${combo.descripcion}", fontWeight = FontWeight.Bold)
-                            Text("Precio: ₡${combo.precio}")
-                            Text("Cantidad: $cantidad")
+                        Box(modifier = Modifier.fillMaxWidth()) {
+                            Column(modifier = Modifier
+                                .padding(12.dp)
+                                .align(Alignment.CenterStart)
+                            ) {
+                                Text("Combo ${combo.numero}: ${combo.descripcion}", fontWeight = FontWeight.Bold)
+                                Text("Precio: ₡${combo.precio}")
+                                Text("Cantidad: $cantidad")
+                            }
+
+                            IconButton(
+                                onClick = {
+                                    carritoViewModel.eliminarCombo(combo)
+                                    Toast.makeText(context, "Combo eliminado", Toast.LENGTH_SHORT).show()
+                                },
+                                modifier = Modifier
+                                    .align(Alignment.TopEnd)
+                                    .padding(4.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Close,
+                                    contentDescription = "Eliminar combo",
+                                    tint = Color.Red
+                                )
+                            }
                         }
                     }
                 }
             }
+
 
             Spacer(modifier = Modifier.height(12.dp))
             Text("Subtotal: ₡${"%.2f".format(subtotal)}")

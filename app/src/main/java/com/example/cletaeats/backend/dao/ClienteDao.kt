@@ -114,6 +114,21 @@ class ClienteDAO(context: Context) {
         val db = dbHelper.writableDatabase
         return db.delete("Cliente", "cedula = ?", arrayOf(cedula)) > 0
     }
+
+    fun clienteActivo(cedula: String): Boolean {
+        val db = dbHelper.readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT estado FROM Cliente WHERE cedula = ?",
+            arrayOf(cedula)
+        )
+        var activo = false
+        if (cursor.moveToFirst()) {
+            activo = cursor.getString(0) == "activo"
+        }
+        cursor.close()
+        return activo
+    }
+
 }
 
 
