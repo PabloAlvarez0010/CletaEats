@@ -7,6 +7,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -48,27 +49,45 @@ fun HistorialPedidosRepartidorScreen(cedulaRepartidor: String, navController: Na
             )
         }
     ) { padding ->
-        LazyColumn(modifier = Modifier
-            .padding(padding)
-            .padding(16.dp)) {
-            items(pedidos) { pedido ->
-                val restaurante = restauranteDAO.buscarPorId(pedido.restauranteId)
-                val cliente = clienteDAO.buscarPorCedula(pedido.clienteId)
+        if (pedidos.isEmpty()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(16.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    "No hay historial de pedidos.",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = MaterialTheme.typography.h6.fontSize
+                )
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .padding(padding)
+                    .padding(16.dp)
+            ) {
+                items(pedidos) { pedido ->
+                    val restaurante = restauranteDAO.buscarPorId(pedido.restauranteId)
+                    val cliente = clienteDAO.buscarPorCedula(pedido.clienteId)
 
-                Card(
-                    elevation = 6.dp,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                ) {
-                    Column(modifier = Modifier.padding(12.dp)) {
-                        Text("Pedido #${pedido.id}", fontWeight = FontWeight.Bold)
-                        Text("Estado: ${pedido.estado}")
-                        Text("Hora pedido: ${pedido.horaPedido}")
-                        Text("Hora entrega: ${pedido.horaEntrega ?: "No registrada"}")
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text("Restaurante: ${restaurante?.nombre ?: "-"}")
-                        Text("Cliente: ${cliente?.nombre ?: "-"}")
+                    Card(
+                        elevation = 6.dp,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp)
+                    ) {
+                        Column(modifier = Modifier.padding(12.dp)) {
+                            Text("Pedido #${pedido.id}", fontWeight = FontWeight.Bold)
+                            Text("Estado: ${pedido.estado}")
+                            Text("Hora pedido: ${pedido.horaPedido}")
+                            Text("Hora entrega: ${pedido.horaEntrega ?: "No registrada"}")
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text("Restaurante: ${restaurante?.nombre ?: "-"}")
+                            Text("Cliente: ${cliente?.nombre ?: "-"}")
+                        }
                     }
                 }
             }

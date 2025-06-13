@@ -12,5 +12,5 @@ data class Repartidor(
     val kmDiarios: Double,
     val costoKmHabil: Double,
     val costoKmFeriado: Double,
-    val amonestaciones: Int
+    var amonestaciones: Int
 )

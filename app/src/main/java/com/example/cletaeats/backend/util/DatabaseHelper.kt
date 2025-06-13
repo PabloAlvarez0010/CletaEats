@@ -125,7 +125,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
     private fun insertarDatosIniciales(db: SQLiteDatabase) {
         // Insertar Clientes
         db.execSQL("INSERT INTO Cliente VALUES ('111', 'Carlos Jiménez', 'Heredia Centro', '101', '88884444', 'carlos@gmail.com', 'activo');")
-        db.execSQL("INSERT INTO Cliente VALUES ('222', 'María Fernández', 'Barva', '202', '88995566', 'mariaf@hotmail.com', 'activo');")
+        db.execSQL("INSERT INTO Cliente VALUES ('222', 'María Fernández', 'Barva', '202', '88995566', 'mariaf@hotmail.com', 'suspendido');")
         db.execSQL("INSERT INTO Cliente VALUES ('333', 'Luis Ramírez', 'San Pablo', '303', '87001122', 'luis@correo.com', 'suspendido');")
 
         // Insertar Repartidores

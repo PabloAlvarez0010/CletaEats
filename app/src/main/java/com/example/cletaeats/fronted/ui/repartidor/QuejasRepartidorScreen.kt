@@ -7,11 +7,13 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.cletaeats.backend.dao.*
 
@@ -39,16 +41,23 @@ fun QuejasRepartidorScreen(navController: NavController, cedulaRepartidor: Strin
             )
         }
     ) { padding ->
-        LazyColumn(
-            modifier = Modifier
-                .padding(padding)
-                .padding(16.dp)
-        ) {
-            if (quejas.isEmpty()) {
-                item {
-                    Text("No tienes quejas registradas.", style = MaterialTheme.typography.body1)
-                }
-            } else {
+        if (quejas.isEmpty()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(16.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("No tienes quejas registradas.", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            }
+        }
+         else {
+            LazyColumn(
+                modifier = Modifier
+                    .padding(padding)
+                    .padding(16.dp)
+            ) {
                 items(quejas) { queja ->
                     val cliente = clienteDAO.buscarPorCedula(queja.clienteId)
                     Card(

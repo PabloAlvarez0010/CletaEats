@@ -74,7 +74,7 @@ fun ClientesPendientesScreen(navController: NavController) {
 
                             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
                                 Button(onClick = {
-                                    usuarioDAO.actualizarVerificado(cliente.cedula, "sí")
+                                    usuarioDAO.actualizarVerificado(cliente.cedula, "si")
                                     clientesPendientes = clientesPendientes.filterNot { it.cedula == cliente.cedula }
                                 }) {
                                     Text("Aceptar")

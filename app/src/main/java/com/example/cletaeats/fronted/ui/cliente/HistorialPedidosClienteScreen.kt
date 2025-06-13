@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.cletaeats.backend.dao.PedidoDAO
 import com.example.cletaeats.backend.dao.QuejaDAO
+import com.example.cletaeats.backend.dao.RepartidorDAO
 import com.example.cletaeats.backend.model.Queja
 import java.text.SimpleDateFormat
 import java.util.*
@@ -170,10 +171,25 @@ fun HistorialPedidosClienteScreen(navController: NavController, cedulaCliente: S
                                 calificacion = calificacion,
                                 pedidoId = pedidoActualId
                             )
+
                             val exito = quejaDAO.insertar(queja)
+
                             if (exito) {
                                 Toast.makeText(context, "Calificación enviada", Toast.LENGTH_SHORT).show()
                                 pedidosYaCalificados.add(pedidoActualId!!)
+
+                                // 🔁 Lógica de amonestación
+                                if (calificacion < 3) {
+                                    val repartidorDAO = RepartidorDAO(context)
+                                    val repartidor = repartidorDAO.buscarPorCedula(repartidorActual!!)
+                                    if (repartidor != null) {
+                                        repartidor.amonestaciones += 1
+                                        val actualizado = repartidorDAO.actualizar(repartidor)
+                                        if (actualizado) {
+                                            Toast.makeText(context, "Repartidor amonestado automáticamente", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+                                }
                             } else {
                                 Toast.makeText(context, "Error al guardar", Toast.LENGTH_SHORT).show()
                             }
@@ -184,7 +200,8 @@ fun HistorialPedidosClienteScreen(navController: NavController, cedulaCliente: S
                     }) {
                         Text("Enviar")
                     }
-                },
+                }
+                ,
                 dismissButton = {
                     OutlinedButton(onClick = { mostrarDialogo = false }) {
                         Text("Cancelar")

@@ -1,5 +1,6 @@
 package com.example.cletaeats.fronted.ui.admin
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -29,13 +30,16 @@ fun ListaClientesScreen(navController: NavController) {
     var mostrarActivos by remember { mutableStateOf(true) }
     var clientes by remember { mutableStateOf(emptyList<Cliente>()) }
 
-    // Cargar los datos según el estado del switch
-    LaunchedEffect(mostrarActivos) {
+    fun cargarClientes() {
         clientes = if (mostrarActivos) {
             clienteDAO.obtenerClientesActivos()
         } else {
             clienteDAO.obtenerClientesInactivos()
         }
+    }
+
+    LaunchedEffect(mostrarActivos) {
+        cargarClientes()
     }
 
     Scaffold(
@@ -45,7 +49,7 @@ fun ListaClientesScreen(navController: NavController) {
                 backgroundColor = Color.Black,
                 navigationIcon = {
                     IconButton(onClick = {
-                        navController.popBackStack() // Regresa a AdminHome
+                        navController.popBackStack()
                     }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Volver", tint = Color.White)
                     }
@@ -60,7 +64,6 @@ fun ListaClientesScreen(navController: NavController) {
                 .padding(padding)
                 .padding(16.dp)
         ) {
-            // Switch visual moderno
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
@@ -75,7 +78,10 @@ fun ListaClientesScreen(navController: NavController) {
                 )
                 Switch(
                     checked = mostrarActivos,
-                    onCheckedChange = { mostrarActivos = it },
+                    onCheckedChange = {
+                        mostrarActivos = it
+                        cargarClientes()
+                    },
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = UberGreen,
                         uncheckedThumbColor = Color.Gray
@@ -100,6 +106,38 @@ fun ListaClientesScreen(navController: NavController) {
                                 Text("Cédula: ${cliente.cedula}", color = Color.White, fontSize = 14.sp)
                                 Text("Correo: ${cliente.correo}", color = Color.White, fontSize = 14.sp)
                                 Text("Estado: ${cliente.estado}", color = Color.White, fontSize = 14.sp)
+
+                                Spacer(modifier = Modifier.height(8.dp))
+
+                                Button(
+                                    onClick = {
+                                        val nuevoEstado = if (cliente.estado == "activo") "suspendido" else "activo"
+                                        val clienteActualizado = cliente.copy(estado = nuevoEstado)
+                                        val exito = clienteDAO.actualizar(clienteActualizado)
+                                        if (exito) {
+                                            Toast.makeText(
+                                                context,
+                                                "Cliente ${if (mostrarActivos) "suspendido" else "activado"} correctamente",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                            cargarClientes()
+                                        } else {
+                                            Toast.makeText(
+                                                context,
+                                                "Error al actualizar el estado",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
+                                    },
+                                    colors = ButtonDefaults.buttonColors(
+                                        backgroundColor = if (mostrarActivos) Color.Red else Color(0xFF06C167)
+                                    )
+                                ) {
+                                    Text(
+                                        if (mostrarActivos) "Suspender" else "Activar",
+                                        color = Color.White
+                                    )
+                                }
                             }
                         }
                     }
@@ -108,3 +146,4 @@ fun ListaClientesScreen(navController: NavController) {
         }
     }
 }
+
