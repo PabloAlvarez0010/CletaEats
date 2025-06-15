@@ -142,7 +142,12 @@ fun RepartidorHomeScreen(navController: NavController, cedula: String) {
                             onClick = {
                                 val exito = pedidoDAO.marcarPedidoEntregado(pedido.id)
                                 if (exito) {
+                                    // Marcar repartidor como disponible
+                                    pedido.repartidorId?.let { repartidorDAO.marcarRepartidorDisponible(it) }
+
+                                    // Actualizar la lista de pedidos
                                     pedidosAsignados = pedidosAsignados.filter { it.id != pedido.id }
+
                                     Toast.makeText(context, "Pedido marcado como entregado", Toast.LENGTH_SHORT).show()
                                 } else {
                                     Toast.makeText(context, "Error al marcar el pedido", Toast.LENGTH_SHORT).show()
@@ -153,6 +158,7 @@ fun RepartidorHomeScreen(navController: NavController, cedula: String) {
                         ) {
                             Text("Marcar como entregado", color = Color.White)
                         }
+
                     }
                 }
             }

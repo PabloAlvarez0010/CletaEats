@@ -120,11 +120,15 @@ class RepartidorDAO(context: Context) {
         }
         return lista
     }
-   fun obtenerRepartidorDisponible(): Repartidor? {
+    fun obtenerRepartidorDisponible(): Repartidor? {
         val db = dbHelper.readableDatabase
-        val cursor = db.rawQuery("SELECT * FROM Repartidor WHERE estado = 'disponible' LIMIT 1", null)
-        return if (cursor.moveToFirst()) {
-            Repartidor(
+        val cursor = db.rawQuery(
+            "SELECT * FROM Repartidor WHERE estado = 'disponible' AND amonestaciones < 4 ORDER BY RANDOM() LIMIT 1",
+            null
+        )
+        var repartidor: Repartidor? = null
+        if (cursor.moveToFirst()) {
+            repartidor = Repartidor(
                 cedula = cursor.getString(cursor.getColumnIndexOrThrow("cedula")),
                 nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre")),
                 correo = cursor.getString(cursor.getColumnIndexOrThrow("correo")),
@@ -138,6 +142,24 @@ class RepartidorDAO(context: Context) {
                 costoKmFeriado = cursor.getDouble(cursor.getColumnIndexOrThrow("costo_km_feriado")),
                 amonestaciones = cursor.getInt(cursor.getColumnIndexOrThrow("amonestaciones"))
             )
-        } else null
+        }
+        cursor.close()
+        return repartidor
     }
+
+    fun marcarRepartidorOcupado(cedula: String): Boolean {
+        val db = dbHelper.writableDatabase
+        val values = ContentValues().apply {
+            put("estado", "ocupado")
+        }
+        return db.update("Repartidor", values, "cedula = ?", arrayOf(cedula)) > 0
+    }
+    fun marcarRepartidorDisponible(cedula: String): Boolean {
+        val db = dbHelper.writableDatabase
+        val values = ContentValues().apply {
+            put("estado", "disponible")
+        }
+        return db.update("Repartidor", values, "cedula = ?", arrayOf(cedula)) > 0
+    }
+
 }

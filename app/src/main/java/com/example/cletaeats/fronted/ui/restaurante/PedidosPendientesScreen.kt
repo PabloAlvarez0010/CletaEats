@@ -91,29 +91,53 @@ fun PedidosPendientesScreen(navController: NavController, restauranteId: Int) {
                             }
 
                             Spacer(modifier = Modifier.height(8.dp))
+
+                            var mostrarDialogoNoRepartidores by remember { mutableStateOf(false) }
+
                             Button(
                                 onClick = {
                                     val repartidor = repartidorDAO.obtenerRepartidorDisponible()
                                     if (repartidor != null) {
                                         val exito = pedidoDAO.marcarPedidoEnCamino(pedido.id, repartidor.cedula)
                                         if (exito) {
+                                            // Marcar el repartidor como ocupado luego de asignarlo al pedido
+                                            repartidorDAO.marcarRepartidorOcupado(repartidor.cedula)
+
+                                            // Refrescar pedidos y combos
                                             pedidos = pedidoDAO.obtenerPedidosPendientesPorRestaurante(restauranteId)
                                             combosPorPedido = pedidos.associateBy(
                                                 { it.id },
                                                 { pedidoDAO.obtenerCombosPorPedido(it.id) }
                                             )
+
                                             Toast.makeText(context, "Pedido marcado como 'en camino'", Toast.LENGTH_SHORT).show()
                                         } else {
                                             Toast.makeText(context, "Error al actualizar pedido", Toast.LENGTH_SHORT).show()
                                         }
                                     } else {
-                                        Toast.makeText(context, "No hay repartidores disponibles", Toast.LENGTH_SHORT).show()
+                                        mostrarDialogoNoRepartidores = true
                                     }
                                 },
                                 colors = ButtonDefaults.buttonColors(backgroundColor = UberGreen),
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 Text("Marcar como 'En camino'", color = Color.White)
+                            }
+
+
+                            if (mostrarDialogoNoRepartidores) {
+                                AlertDialog(
+                                    onDismissRequest = { mostrarDialogoNoRepartidores = false },
+                                    title = { Text("Sin repartidores disponibles") },
+                                    text = {
+                                        Text("No se puede asignar este pedido porque no hay repartidores disponibles o todos tienen 4 o más amonestaciones.")
+                                    },
+                                    confirmButton = {
+                                        Button(onClick = { mostrarDialogoNoRepartidores = false }) {
+                                            Text("Aceptar")
+                                        }
+                                    }
+                                )
                             }
                         }
                     }
