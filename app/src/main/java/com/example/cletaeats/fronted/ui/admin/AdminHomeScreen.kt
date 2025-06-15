@@ -84,7 +84,8 @@ fun AdminHomeScreen(navController: NavController, nombre: String, cedula: String
                             "Incluir cliente",
                             "Listar clientes activos/suspendidos",
                             "Cliente con más pedidos"
-                        )
+                        ),
+                        iconResId = R.drawable.client
                     )
 
                     ExpandableDrawerOption(
@@ -97,7 +98,8 @@ fun AdminHomeScreen(navController: NavController, nombre: String, cedula: String
                             "Restaurante con más/menos pedidos",
                             "Monto total por restaurante",
                             "Monto total general"
-                        )
+                        ),
+                        iconResId = R.drawable.restaurant
                     )
 
                     ExpandableDrawerOption(
@@ -109,7 +111,8 @@ fun AdminHomeScreen(navController: NavController, nombre: String, cedula: String
                             "Incluir repartidor",
                             "Listar sin amonestaciones",
                             "Quejas por repartidor"
-                        )
+                        ),
+                        iconResId = R.drawable.bycicle
                     )
 
                     ExpandableDrawerOption(
@@ -121,19 +124,9 @@ fun AdminHomeScreen(navController: NavController, nombre: String, cedula: String
                             "Pedidos por cliente",
                             "Cliente con más pedidos2",
                             "Hora pico"
-                        )
+                        ),
+                        iconResId = R.drawable.orders
                     )
-
-                    /*ExpandableDrawerOption(
-                        navController = navController,
-                        title = "Reportes",
-                        expanded = reporteExpanded,
-                        onToggle = { reporteExpanded = !reporteExpanded },
-                        subOptions = listOf(
-                            "Generar reporte general",
-                            "Generar rúbrica"
-                        )
-                    )*/
 
                     Spacer(modifier = Modifier.weight(1f))
                     Divider()
@@ -188,7 +181,8 @@ fun ExpandableDrawerOption(
     title: String,
     expanded: Boolean,
     onToggle: () -> Unit,
-    subOptions: List<String>
+    subOptions: List<String>,
+    iconResId: Int? = null
 ) {
     Column {
         Row(
@@ -198,7 +192,15 @@ fun ExpandableDrawerOption(
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(Icons.Default.ArrowDropDown, contentDescription = null, tint = Color.White)
+            iconResId?.let {
+                Image(
+                    painter = painterResource(id = it),
+                    contentDescription = null,
+                    modifier = Modifier.size(24.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+            }
+
             Text(title, color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
             Spacer(Modifier.weight(1f))
             Icon(

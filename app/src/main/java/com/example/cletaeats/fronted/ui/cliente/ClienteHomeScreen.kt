@@ -17,6 +17,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -32,6 +33,7 @@ import com.example.cletaeats.backend.model.Combo
 import com.example.cletaeats.backend.model.Restaurante
 import kotlinx.coroutines.launch
 import com.example.cletaeats.fronted.ui.DrawerOption
+import com.example.cletaeats.fronted.ui.DrawerOptionWithImage
 
 
 private val UberGreen = Color(0xFF06C167)
@@ -112,12 +114,20 @@ fun ClienteHomeScreen(navController: NavController, cedula: String, carritoViewM
 
                 // Opciones
                 Column(modifier = Modifier.background(UberGreen).fillMaxSize()) {
-                    DrawerOption("Pedidos pendientes") {
-                        navController.navigate("PedidosPendientesCliente/${cliente?.cedula}")
-                    }
-                    DrawerOption("Historial de pedidos") {
-                        navController.navigate("HistorialPedidosCliente/${cliente?.cedula}")
-                    }
+                    DrawerOptionWithImage(
+                        text = "Pedidos pendientes",
+                        imageResId = R.drawable.pendingfood,
+                        onClick = {
+                            navController.navigate("PedidosPendientesCliente/${cliente?.cedula}")
+                        }
+                    )
+                    DrawerOptionWithImage(
+                        text = "Historial de pedidos",
+                        imageResId = R.drawable.ordershistory,
+                        onClick = {
+                            navController.navigate("HistorialPedidosCliente/${cliente?.cedula}")
+                        }
+                    )
 
                     Spacer(modifier = Modifier.weight(1f))
                     Divider()
@@ -206,7 +216,6 @@ fun ClienteHomeScreen(navController: NavController, cedula: String, carritoViewM
                                         }
 
                                     }
-
                                 }
                             }
                         }
@@ -269,5 +278,7 @@ fun ClienteHomeScreen(navController: NavController, cedula: String, carritoViewM
         }
     }
 }
+
+
 
 

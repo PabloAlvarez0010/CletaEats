@@ -29,6 +29,7 @@ import com.example.cletaeats.backend.dao.RestauranteDAO
 import com.example.cletaeats.backend.model.Combo
 import com.example.cletaeats.backend.model.Restaurante
 import com.example.cletaeats.fronted.ui.DrawerOption
+import com.example.cletaeats.fronted.ui.DrawerOptionWithImage
 import kotlinx.coroutines.launch
 
 private val UberGreen = Color(0xFF06C167)
@@ -98,13 +99,32 @@ fun RestauranteHomeScreen(navController: NavController, cedulaJuridica: String) 
                 }
 
                 Column(modifier = Modifier.background(UberGreen).fillMaxSize()) {
-                    DrawerOption("Pedidos pendientes") {
-                        navController.navigate("pedidosPendientes/${restaurante?.id}")
-                    }
 
-                    DrawerOption("Pedidos preparados") {
-                        navController.navigate("pedidosPreparados/${restaurante?.cedulaJuridica}")
-                    }
+                    DrawerOptionWithImage(
+                        text = "Pedidos pendientes",
+                        imageResId = R.drawable.cooking,
+                        onClick = {
+                            navController.navigate("PedidosPendientesCliente/${restaurante?.id}")
+                        }
+                    )
+
+                    DrawerOptionWithImage(
+                        text = "Pedidos preparados",
+                        imageResId = R.drawable.checkfood,
+                        onClick = {
+                            navController.navigate("pedidosPreparados/${restaurante?.cedulaJuridica}")
+                        }
+                    )
+
+                    /*
+                    * DrawerOptionWithImage(
+                        text = "Pedidos pendientes",
+                        imageResId = R.drawable.pendingfood,
+                        onClick = {
+                            navController.navigate("PedidosPendientesCliente/${cliente?.cedula}")
+                        }
+                    )
+                    * */
 
                     Spacer(modifier = Modifier.weight(1f))
                     Divider()

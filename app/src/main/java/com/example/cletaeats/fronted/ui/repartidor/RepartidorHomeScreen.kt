@@ -24,6 +24,7 @@ import com.example.cletaeats.R
 import com.example.cletaeats.backend.dao.*
 import com.example.cletaeats.backend.model.*
 import com.example.cletaeats.fronted.ui.DrawerOption
+import com.example.cletaeats.fronted.ui.DrawerOptionWithImage
 import kotlinx.coroutines.launch
 
 private val UberGreen = Color(0xFF06C167)
@@ -93,12 +94,20 @@ fun RepartidorHomeScreen(navController: NavController, cedula: String) {
 
                 // Menú lateral
                 Column(modifier = Modifier.background(UberGreen).fillMaxSize()) {
-                    DrawerOption("Historial de pedidos") {
-                        navController.navigate("historialPedidosRepartidor/${repartidor?.cedula ?: ""}")
-                    }
-                    DrawerOption("Ver quejas") {
-                        navController.navigate("quejasRepartidor/${repartidor?.cedula ?: ""}")
-                    }
+                    DrawerOptionWithImage(
+                        text = "Historial de pedidos",
+                        imageResId = R.drawable.check,
+                        onClick = {
+                            navController.navigate("historialPedidosRepartidor/${repartidor?.cedula ?: ""}")
+                        }
+                    )
+                    DrawerOptionWithImage(
+                        text = "Ver quejas",
+                        imageResId = R.drawable.quejas,
+                        onClick = {
+                            navController.navigate("quejasRepartidor/${repartidor?.cedula ?: ""}")
+                        }
+                    )
                     Spacer(modifier = Modifier.weight(1f))
                     Divider()
                     DrawerOption(
