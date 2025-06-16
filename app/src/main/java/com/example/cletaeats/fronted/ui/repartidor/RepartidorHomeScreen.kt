@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -122,52 +123,83 @@ fun RepartidorHomeScreen(navController: NavController, cedula: String) {
                 }
             }
         },
-        backgroundColor = UberGray
+        backgroundColor = Color.White
     ) { padding ->
-        LazyColumn(modifier = Modifier
-            .padding(padding)
-            .padding(12.dp)) {
-            items(pedidosAsignados) { pedido ->
-                val cliente = clienteDAO.buscarPorCedula(pedido.clienteId)
-                val restaurante = restauranteDAO.buscarPorId(pedido.restauranteId)
+        if (pedidosAsignados.isEmpty()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(16.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Image(
+                        painter = painterResource(id = R.drawable.cletaeats2),
+                        contentDescription = "Sin pedidos",
+                        modifier = Modifier.size(400.dp)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        "No hay pedidos asignados actualmente.",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = UberBlack
+                    )
+                    Text(
+                        "¡Disfruta un descanso por ahora!",
+                        fontSize = 14.sp,
+                        color = Color.Gray
+                    )
+                }
+            }
+        }
+        else {
+            LazyColumn(modifier = Modifier
+                .padding(padding)
+                .padding(12.dp)) {
+                items(pedidosAsignados) { pedido ->
+                    val cliente = clienteDAO.buscarPorCedula(pedido.clienteId)
+                    val restaurante = restauranteDAO.buscarPorId(pedido.restauranteId)
 
-                Card(
-                    backgroundColor = Color.White,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-                    elevation = 6.dp
-                ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Text("Pedido #${pedido.id}", fontSize = 18.sp, color = UberBlack)
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text("Restaurante: ${restaurante?.nombre ?: "-"}", fontSize = 14.sp)
-                        Text("Cliente: ${cliente?.nombre ?: "-"}", fontSize = 14.sp)
-                        Text("Dirección Cliente: ${cliente?.direccion ?: "-"}", fontSize = 14.sp)
-                        Text("Teléfono Cliente: ${cliente?.telefono ?: "-"}", fontSize = 14.sp)
-                        Spacer(modifier = Modifier.height(8.dp))
+                    Card(
+                        backgroundColor = Color.White,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                        elevation = 6.dp
+                    ) {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Text("Pedido #${pedido.id}", fontSize = 18.sp, color = UberBlack)
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text("Restaurante: ${restaurante?.nombre ?: "-"}", fontSize = 14.sp)
+                            Text("Cliente: ${cliente?.nombre ?: "-"}", fontSize = 14.sp)
+                            Text("Dirección Cliente: ${cliente?.direccion ?: "-"}", fontSize = 14.sp)
+                            Text("Teléfono Cliente: ${cliente?.telefono ?: "-"}", fontSize = 14.sp)
+                            Spacer(modifier = Modifier.height(8.dp))
 
-                        Button(
-                            onClick = {
-                                val exito = pedidoDAO.marcarPedidoEntregado(pedido.id)
-                                if (exito) {
-                                    // Marcar repartidor como disponible
-                                    pedido.repartidorId?.let { repartidorDAO.marcarRepartidorDisponible(it) }
+                            Button(
+                                onClick = {
+                                    val exito = pedidoDAO.marcarPedidoEntregado(pedido.id)
+                                    if (exito) {
+                                        // Marcar repartidor como disponible
+                                        pedido.repartidorId?.let { repartidorDAO.marcarRepartidorDisponible(it) }
 
-                                    // Actualizar la lista de pedidos
-                                    pedidosAsignados = pedidosAsignados.filter { it.id != pedido.id }
+                                        // Actualizar la lista de pedidos
+                                        pedidosAsignados = pedidosAsignados.filter { it.id != pedido.id }
 
-                                    Toast.makeText(context, "Pedido marcado como entregado", Toast.LENGTH_SHORT).show()
-                                } else {
-                                    Toast.makeText(context, "Error al marcar el pedido", Toast.LENGTH_SHORT).show()
-                                }
-                            },
-                            colors = ButtonDefaults.buttonColors(backgroundColor = UberGreen),
-                            modifier = Modifier.align(Alignment.End)
-                        ) {
-                            Text("Marcar como entregado", color = Color.White)
+                                        Toast.makeText(context, "Pedido marcado como entregado", Toast.LENGTH_SHORT).show()
+                                    } else {
+                                        Toast.makeText(context, "Error al marcar el pedido", Toast.LENGTH_SHORT).show()
+                                    }
+                                },
+                                colors = ButtonDefaults.buttonColors(backgroundColor = UberGreen),
+                                modifier = Modifier.align(Alignment.End)
+                            ) {
+                                Text("Marcar como entregado", color = Color.White)
+                            }
+
                         }
-
                     }
                 }
             }

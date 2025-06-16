@@ -122,7 +122,7 @@ fun AdminHomeScreen(navController: NavController, nombre: String, cedula: String
                         onToggle = { pedidoExpanded = !pedidoExpanded },
                         subOptions = listOf(
                             "Pedidos por cliente",
-                            "Cliente con más pedidos2",
+                            "Cliente con más pedidos realizados",
                             "Hora pico"
                         ),
                         iconResId = R.drawable.orders
@@ -248,7 +248,7 @@ fun ExpandableDrawerOption(
                             "Pedidos por cliente" -> {
                                 navController.navigate("pedidosPorCliente")
                             }
-                            "Cliente con más pedidos2" -> {
+                            "Cliente con más pedidos realizados" -> {
                                 navController.navigate("clientesTopPedidos2")
                             }
                             "Hora pico" -> {
