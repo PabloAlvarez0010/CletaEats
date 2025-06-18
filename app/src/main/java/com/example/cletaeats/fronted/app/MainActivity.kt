@@ -177,7 +177,7 @@ fun AppNavigator() {
             HistorialPedidosClienteScreen(navController, cedulaCliente)
         }
         composable("clientesTopPedidos2") {
-            ClientesTopPedidosScreen2()
+            ClientesTopPedidosScreen2(navController)
         }
         composable("horaPico") {
             HoraPicoScreen(navController)
@@ -214,24 +214,8 @@ fun AppNavigator() {
             QuejasRepartidorScreen(navController, cedula)
         }
 
-
         composable("pedidosPorCliente") {
             PedidosPorClienteScreen(navController)
         }
-
-
-
-        /*composable(
-            route = "home/{rol}/{cedula}",
-            arguments = listOf(
-                navArgument("rol") { type = NavType.StringType },
-                navArgument("cedula") { type = NavType.StringType }
-            )
-        ) { backStackEntry ->
-            val rol = backStackEntry.arguments?.getString("rol") ?: ""
-            val cedula = backStackEntry.arguments?.getString("cedula") ?: ""
-            HomeScreen(rol, cedula)
-        }*/
-
     }
 }

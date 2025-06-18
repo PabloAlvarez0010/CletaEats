@@ -1,9 +1,7 @@
 package com.example.cletaeats.fronted.ui.restaurante
 
-import androidx.compose.animation.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -27,7 +25,6 @@ import com.example.cletaeats.R
 import com.example.cletaeats.backend.dao.ComboDAO
 import com.example.cletaeats.backend.dao.RestauranteDAO
 import com.example.cletaeats.backend.model.Combo
-import com.example.cletaeats.backend.model.Restaurante
 import com.example.cletaeats.fronted.ui.DrawerOption
 import com.example.cletaeats.fronted.ui.DrawerOptionWithImage
 import kotlinx.coroutines.launch
@@ -99,7 +96,6 @@ fun RestauranteHomeScreen(navController: NavController, cedulaJuridica: String) 
                 }
 
                 Column(modifier = Modifier.background(UberGreen).fillMaxSize()) {
-
                     DrawerOptionWithImage(
                         text = "Pedidos pendientes",
                         imageResId = R.drawable.cooking,
@@ -115,16 +111,6 @@ fun RestauranteHomeScreen(navController: NavController, cedulaJuridica: String) 
                             navController.navigate("pedidosPreparados/${restaurante?.cedulaJuridica}")
                         }
                     )
-
-                    /*
-                    * DrawerOptionWithImage(
-                        text = "Pedidos pendientes",
-                        imageResId = R.drawable.pendingfood,
-                        onClick = {
-                            navController.navigate("PedidosPendientesCliente/${cliente?.cedula}")
-                        }
-                    )
-                    * */
 
                     Spacer(modifier = Modifier.weight(1f))
                     Divider()
@@ -142,69 +128,85 @@ fun RestauranteHomeScreen(navController: NavController, cedulaJuridica: String) 
         },
         backgroundColor = UberGray
     ) { padding ->
-        LazyColumn(modifier = Modifier.padding(padding).padding(12.dp)) {
-            items(combos) { combo ->
-                Card(
-                    backgroundColor = UberGreen,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-                    elevation = 8.dp
-                ) {
-                    Box(modifier = Modifier.fillMaxWidth()) {
-                        Column(modifier = Modifier.padding(16.dp)) {
-                            Text("Combo ${combo.numero}", fontSize = 20.sp, color = Color.White)
-                            Text("₡${combo.precio}", color = Color.White)
-                            Text(combo.descripcion, color = Color.White)
-                        }
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(padding)) {
 
-                        IconButton(
-                            onClick = {
-                                comboAEditar = combo
-                                nuevaDescripcion = combo.descripcion
-                            },
-                            modifier = Modifier
-                                .align(Alignment.TopEnd)
-                                .padding(8.dp)
-                        ) {
-                            Icon(Icons.Default.Edit, contentDescription = "Editar", tint = Color.White)
+            Image( // Fondo desenfocado sutil
+                painter = painterResource(id = R.drawable.cletaeats2),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(560.dp)
+                    .background(Color.White.copy(alpha = 0.2f)),
+                alpha = 0.09f
+            )
+
+            LazyColumn(modifier = Modifier
+                .fillMaxSize()
+                .padding(12.dp)) {
+                items(combos) { combo ->
+                    Card(
+                        backgroundColor = UberGreen,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                        elevation = 8.dp
+                    ) {
+                        Box(modifier = Modifier.fillMaxWidth()) {
+                            Column(modifier = Modifier.padding(16.dp)) {
+                                Text("Combo ${combo.numero}", fontSize = 20.sp, color = Color.White)
+                                Text("₡${combo.precio}", color = Color.White)
+                                Text(combo.descripcion, color = Color.White)
+                            }
+
+                            IconButton(
+                                onClick = {
+                                    comboAEditar = combo
+                                    nuevaDescripcion = combo.descripcion
+                                },
+                                modifier = Modifier
+                                    .align(Alignment.TopEnd)
+                                    .padding(8.dp)
+                            ) {
+                                Icon(Icons.Default.Edit, contentDescription = "Editar", tint = Color.White)
+                            }
                         }
                     }
                 }
             }
-        }
 
-        // Diálogo para editar descripción
-        comboAEditar?.let { combo ->
-            AlertDialog(
-                onDismissRequest = { comboAEditar = null },
-                title = { Text("Editar Descripción") },
-                text = {
-                    TextField(
-                        value = nuevaDescripcion,
-                        onValueChange = { nuevaDescripcion = it },
-                        label = { Text("Nueva descripción") }
-                    )
-                },
-                confirmButton = {
-                    Button(onClick = {
-                        val actualizado = combo.copy(descripcion = nuevaDescripcion)
-                        comboDAO.actualizar(actualizado)
-                        combos = combos.map {
-                            if (it.id == combo.id) actualizado else it
+            comboAEditar?.let { combo ->
+                AlertDialog(
+                    onDismissRequest = { comboAEditar = null },
+                    title = { Text("Editar Descripción") },
+                    text = {
+                        TextField(
+                            value = nuevaDescripcion,
+                            onValueChange = { nuevaDescripcion = it },
+                            label = { Text("Nueva descripción") }
+                        )
+                    },
+                    confirmButton = {
+                        Button(onClick = {
+                            val actualizado = combo.copy(descripcion = nuevaDescripcion)
+                            comboDAO.actualizar(actualizado)
+                            combos = combos.map {
+                                if (it.id == combo.id) actualizado else it
+                            }
+                            comboAEditar = null
+                        }) {
+                            Text("Guardar")
                         }
-                        comboAEditar = null
-                    }) {
-                        Text("Guardar")
+                    },
+                    dismissButton = {
+                        Button(onClick = { comboAEditar = null }) {
+                            Text("Cancelar")
+                        }
                     }
-                },
-                dismissButton = {
-                    Button(onClick = { comboAEditar = null }) {
-                        Text("Cancelar")
-                    }
-                }
-            )
+                )
+            }
         }
     }
 }
+
 

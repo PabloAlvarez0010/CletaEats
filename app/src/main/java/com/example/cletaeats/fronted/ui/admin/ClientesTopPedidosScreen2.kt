@@ -21,7 +21,7 @@ import com.example.cletaeats.backend.model.Cliente
 private val UberGreen = Color(0xFF06C167)
 private val UberGray = Color(0xFFF5F5F5)
 @Composable
-fun ClientesTopPedidosScreen2() {
+fun ClientesTopPedidosScreen2(navController: NavController) {
     val context = LocalContext.current
     val pedidoDAO = remember { PedidoDAO(context) }
 
@@ -30,8 +30,15 @@ fun ClientesTopPedidosScreen2() {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Clientes con más pedidos", color = Color.White) },
-                backgroundColor = Color(0xFF000000)
+                title = { Text("Clientes con Más Pedidos", color = Color.White) },
+                backgroundColor = Color.Black,
+                navigationIcon = {
+                    IconButton(onClick = {
+                        navController.popBackStack()
+                    }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver", tint = Color.White)
+                    }
+                }
             )
         }
     ) { padding ->
