@@ -1,5 +1,6 @@
 package com.example.cletaeats.fronted.ui.restaurante
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -57,10 +58,11 @@ fun PedidosPreparadosScreen(navController: NavController, cedulaJuridica: String
             items(pedidos) { pedido ->
                 val repartidor: Repartidor? = repartidorDAO.buscarPorCedula(pedido.repartidorId ?: "")
                 Card(
-                    elevation = 4.dp,
                     modifier = Modifier
-                        .fillMaxWidth()
                         .padding(vertical = 8.dp)
+                        .fillMaxWidth()
+                        .border(1.dp, Color.Black, shape = MaterialTheme.shapes.medium),
+                    elevation = 6.dp
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text("Pedido #${pedido.id}")

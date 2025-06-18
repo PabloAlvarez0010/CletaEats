@@ -1,5 +1,6 @@
 package com.example.cletaeats.fronted.ui.repartidor
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -74,10 +75,11 @@ fun HistorialPedidosRepartidorScreen(cedulaRepartidor: String, navController: Na
                     val cliente = clienteDAO.buscarPorCedula(pedido.clienteId)
 
                     Card(
-                        elevation = 6.dp,
                         modifier = Modifier
-                            .fillMaxWidth()
                             .padding(vertical = 8.dp)
+                            .fillMaxWidth()
+                            .border(1.dp, Color.Black, shape = MaterialTheme.shapes.medium),
+                        elevation = 6.dp
                     ) {
                         Column(modifier = Modifier.padding(12.dp)) {
                             Text("Pedido #${pedido.id}", fontWeight = FontWeight.Bold)

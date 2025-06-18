@@ -1,5 +1,6 @@
 package com.example.cletaeats.fronted.ui.repartidor
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -62,8 +63,9 @@ fun QuejasRepartidorScreen(navController: NavController, cedulaRepartidor: Strin
                     val cliente = clienteDAO.buscarPorCedula(queja.clienteId)
                     Card(
                         modifier = Modifier
+                            .padding(vertical = 8.dp)
                             .fillMaxWidth()
-                            .padding(vertical = 8.dp),
+                            .border(1.dp, Color.Black, shape = MaterialTheme.shapes.medium),
                         elevation = 6.dp
                     ) {
                         Column(modifier = Modifier.padding(12.dp)) {

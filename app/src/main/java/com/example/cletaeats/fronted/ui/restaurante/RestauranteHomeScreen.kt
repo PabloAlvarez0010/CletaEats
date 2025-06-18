@@ -100,7 +100,7 @@ fun RestauranteHomeScreen(navController: NavController, cedulaJuridica: String) 
                         text = "Pedidos pendientes",
                         imageResId = R.drawable.cooking,
                         onClick = {
-                            navController.navigate("PedidosPendientesCliente/${restaurante?.id}")
+                            navController.navigate("pedidosPendientes/${restaurante?.id}")
                         }
                     )
 

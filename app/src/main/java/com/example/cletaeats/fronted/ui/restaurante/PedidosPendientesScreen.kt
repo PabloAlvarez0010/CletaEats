@@ -1,6 +1,7 @@
 package com.example.cletaeats.fronted.ui.restaurante
 
 import android.widget.Toast
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -74,7 +75,13 @@ fun PedidosPendientesScreen(navController: NavController, restauranteId: Int) {
 
                     val combos = combosPorPedido[pedido.id] ?: emptyList()
 
-                    Card(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp), elevation = 6.dp) {
+                    Card(
+                        modifier = Modifier
+                            .padding(vertical = 8.dp)
+                            .fillMaxWidth()
+                            .border(1.dp, Color.Black, shape = MaterialTheme.shapes.medium),
+                        elevation = 6.dp
+                    ) {
                         Column(modifier = Modifier.padding(12.dp)) {
                             Text("Pedido #${pedido.id}", fontWeight = FontWeight.Bold, fontSize = 18.sp)
                             Text("Cliente: ${cliente?.nombre ?: "Desconocido"} (${pedido.clienteId})")

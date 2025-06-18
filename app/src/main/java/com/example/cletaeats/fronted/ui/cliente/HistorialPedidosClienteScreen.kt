@@ -1,6 +1,7 @@
 package com.example.cletaeats.fronted.ui.cliente
 
 import android.widget.Toast
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -82,7 +83,13 @@ fun HistorialPedidosClienteScreen(navController: NavController, cedulaCliente: S
                 items(historial) { pedido ->
                     val yaExiste = pedido.id in pedidosYaCalificados
 
-                    Card(modifier = Modifier.padding(vertical = 8.dp)) {
+                    Card(
+                        modifier = Modifier
+                            .padding(vertical = 8.dp)
+                            .fillMaxWidth()
+                            .border(1.dp, Color.Black, shape = MaterialTheme.shapes.medium),
+                        elevation = 4.dp
+                    ) {
                         Column(modifier = Modifier.padding(12.dp)) {
                             Text("Restaurante: ${pedido.restaurante} (${pedido.tipoComida})", fontWeight = FontWeight.Bold)
                             Text("Estado: ${pedido.estado}")
