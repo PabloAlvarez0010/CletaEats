@@ -126,7 +126,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
         // Insertar Clientes
         db.execSQL("INSERT INTO Cliente VALUES ('111', 'Carlos Jiménez', 'Heredia Centro', '101', '88884444', 'carlos@gmail.com', 'activo');")
         db.execSQL("INSERT INTO Cliente VALUES ('222', 'María Fernández', 'Barva', '202', '88995566', 'mariaf@hotmail.com', 'suspendido');")
-        db.execSQL("INSERT INTO Cliente VALUES ('333', 'Luis Ramírez', 'San Pablo', '303', '87001122', 'luis@correo.com', 'suspendido');")
 
         // Insertar Repartidores
         db.execSQL("INSERT INTO Repartidor VALUES ('444', 'Andrés Mora', 'andresm@correo.com', 'Heredia', '88001122', '404', 'disponible', 3.2, 10.5, 1000, 1500, 0);")
@@ -138,9 +137,12 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
         db.execSQL("INSERT INTO Usuario (cedula, clave, rol, verificado) VALUES ('222', '1234', 'cliente', 'no');")
         db.execSQL("INSERT INTO Usuario (cedula, clave, rol, verificado) VALUES ('444', '1234', 'repartidor', 'si');")
         db.execSQL("INSERT INTO Usuario (cedula, clave, rol, verificado) VALUES ('555', '1234', 'repartidor', 'si');")
+        db.execSQL("INSERT INTO Usuario (cedula, clave, rol, verificado) VALUES ('666', '1234', 'repartidor', 'no');")
         db.execSQL("INSERT INTO Usuario (cedula, clave, rol, verificado) VALUES ('777', '1234', 'admin', 'si');")
         db.execSQL("INSERT INTO Usuario (cedula, clave, rol, verificado) VALUES ('3101010101', '1234', 'restaurante', 'si');")
         db.execSQL("INSERT INTO Usuario (cedula, clave, rol, verificado) VALUES ('3202020202', '1234', 'restaurante', 'si');")
+        db.execSQL("INSERT INTO Usuario (cedula, clave, rol, verificado) VALUES ('3303030303', '1234', 'restaurante', 'si');")
+
 
         db.execSQL("""
             INSERT INTO Restaurante (nombre, cedula_juridica, direccion, tipo_comida) VALUES
@@ -178,11 +180,5 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
         db.execSQL("INSERT INTO Combo (numero, precio, descripcion, restaurante_id) VALUES (7, 10000, 'Ensalada tropical y smoothie', 3);")
         db.execSQL("INSERT INTO Combo (numero, precio, descripcion, restaurante_id) VALUES (8, 11000, 'Bowl de avena con frutas y yogurt', 3);")
         db.execSQL("INSERT INTO Combo (numero, precio, descripcion, restaurante_id) VALUES (9, 12000, 'Combo vegetariano premium con bebida', 3);")
-
-        /*db.execSQL("INSERT INTO Pedido (cliente_id, restaurante_id, repartidor_id, estado, hora_pedido, hora_entrega, subtotal, costo_transporte, iva, total) VALUES ('111', 1, '444', 'entregado', '2023-10-01 12:00:00', '2023-10-01 12:30:00', 4000, 1000, 500, 5500);")
-        db.execSQL("INSERT INTO Pedido (cliente_id, restaurante_id, repartidor_id, estado, hora_pedido, hora_entrega, subtotal, costo_transporte, iva, total) VALUES ('222', 2, '555', 'entregado', '2023-10-01 12:05:00', '2023-10-01 12:30:00', 5000, 1200, 600, 6800);")
-        db.execSQL("INSERT INTO Pedido (cliente_id, restaurante_id, repartidor_id, estado, hora_pedido, hora_entrega, subtotal, costo_transporte, iva, total) VALUES ('333', 3, '666', 'entregado', '2023-10-01 12:10:00', '2023-10-01 12:30:00', 6000, 1500, 700, 8200);")
-        db.execSQL("INSERT INTO Pedido (cliente_id, restaurante_id, repartidor_id, estado, hora_pedido, hora_entrega, subtotal, costo_transporte, iva, total) VALUES ('111', 1, '444', 'entregado', '2023-10-01 12:15:00', '2023-10-01 12:30:00', 4000, 1000, 500, 5500);")*/
-
     }
 }

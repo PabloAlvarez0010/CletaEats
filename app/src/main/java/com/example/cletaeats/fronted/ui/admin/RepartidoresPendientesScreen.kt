@@ -80,7 +80,7 @@ fun RepartidoresPendientesScreen(navController: NavController) {
                                 horizontalArrangement = Arrangement.SpaceEvenly
                             ) {
                                 Button(onClick = {
-                                    usuarioDAO.actualizarVerificado(repartidor.cedula, "sí")
+                                    usuarioDAO.actualizarVerificado(repartidor.cedula, "si")
                                     repartidoresPendientes = repartidoresPendientes.filterNot { it.cedula == repartidor.cedula }
                                 }) {
                                     Text("Aceptar")

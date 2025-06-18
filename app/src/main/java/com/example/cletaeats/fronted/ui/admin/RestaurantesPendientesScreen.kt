@@ -79,7 +79,7 @@ fun RestaurantesPendientesScreen(navController: NavController) {
                                 horizontalArrangement = Arrangement.SpaceEvenly
                             ) {
                                 Button(onClick = {
-                                    usuarioDAO.actualizarVerificado(restaurante.cedulaJuridica, "sí")
+                                    usuarioDAO.actualizarVerificado(restaurante.cedulaJuridica, "si")
                                     restaurantesPendientes = restaurantesPendientes.filterNot { it.cedulaJuridica == restaurante.cedulaJuridica }
                                 }) {
                                     Text("Aceptar")
