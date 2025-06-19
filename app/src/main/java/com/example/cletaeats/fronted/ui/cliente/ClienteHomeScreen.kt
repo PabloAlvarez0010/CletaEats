@@ -127,7 +127,7 @@ fun ClienteHomeScreen(navController: NavController, cedula: String, carritoViewM
                     DrawerOption(
                         text = "Cerrar sesión",
                         icon = Icons.Default.ExitToApp,
-                        color = Color.Red
+                        color = Color.Black
                     ) {
                         navController.navigate("login") {
                             popUpTo("login") { inclusive = true }

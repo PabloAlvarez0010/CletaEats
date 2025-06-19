@@ -117,7 +117,7 @@ fun RestauranteHomeScreen(navController: NavController, cedulaJuridica: String) 
                     DrawerOption(
                         text = "Cerrar sesión",
                         icon = Icons.Default.ExitToApp,
-                        color = Color.Red
+                        color = Color.Black
                     ) {
                         navController.navigate("login") {
                             popUpTo("login") { inclusive = true }

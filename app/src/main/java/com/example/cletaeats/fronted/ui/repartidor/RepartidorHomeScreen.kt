@@ -3,6 +3,7 @@ package com.example.cletaeats.fronted.ui.repartidor
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -114,7 +115,7 @@ fun RepartidorHomeScreen(navController: NavController, cedula: String) {
                     DrawerOption(
                         text = "Cerrar sesión",
                         icon = Icons.Default.ExitToApp,
-                        color = Color.Red
+                        color = Color.Black
                     ) {
                         navController.navigate("login") {
                             popUpTo("login") { inclusive = true }
@@ -163,10 +164,10 @@ fun RepartidorHomeScreen(navController: NavController, cedula: String) {
                     val restaurante = restauranteDAO.buscarPorId(pedido.restauranteId)
 
                     Card(
-                        backgroundColor = Color.White,
                         modifier = Modifier
+                            .padding(vertical = 8.dp)
                             .fillMaxWidth()
-                            .padding(vertical = 8.dp),
+                            .border(1.dp, Color.Black, shape = MaterialTheme.shapes.medium),
                         elevation = 6.dp
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
